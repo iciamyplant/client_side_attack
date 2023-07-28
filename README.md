@@ -1,4 +1,4 @@
-Client Side Attack
+# Client Side Attacks
 
 = attaque où la connexion au contenu malveillant est initiée à partir du client (généralement en étant incité à cliquer sur un lien malveillant dans un e-mail, un message instantané, ou autre : user interaction often needed), contrairement aux server-side attacks où le serveur initie l'attaque (par exemple SQL injection). 
 - l'attaquant send un link ou autre
@@ -60,19 +60,18 @@ Que fait le code malicieux que j'injecte ?
 [vidéo explication](https://www.youtube.com/watch?v=TVBMqQGLCYM)
 
 
+## Beef-xss
 
+Il existe plusieurs frameworks d'exploitation des failles XSS : BeEF-xss, The Cross-Site Scripting Framework (XSSF), OWASP Xenotix XSS Exploit Framework.
 
+BeEF-xss est un framework d'exploitation Web codé en PHP & JavaScript, se concentre sur l'exploitation de vulnérabilités du coté navigateur (client). Consiste à exploiter un vecteur d’attaque sur une machine cliente (vecteur XSS, CSRF, etc) pour ouvrir une porte d’accès au système, et d’examiner les exploitations potentielles dans le contexte courant du navigateur. Une fois une cible rattachée à BeEF, le framework exploite un tunnel asynchrone (principalement généré par Javascript/Ajax) afin de lancer l’exécution de modules dans le navigateur de la cible, et ainsi perpétuer des attaques à l’encontre du système. 
 
-
-
-
-## 1. Explication
-
-
-
-
-
-
-
-## 2. Pratique
+- lancer un serveur Linux avec beef installé dessus (voir Ngrok, faut ajouter des informations dans le fichier de config) // port forwarding. Serveur de communication = composant qui communique via HTTP avec les navigateurs infectés
+- on lance beef, et on obtient : l'url de l'interface administration + le hook.js à injecter
+- injecter le hook.js dans une page web, site XSSed recense une grande partie de l’actualité liée à cette famille de vulnérabilités
+- envoyer à la victime le lien (email, sms?) et donner une bonne raison de cliquer sur le lien
+- la victime clique, son navigateur va exécuter le contenu du paramètre de l'url qui contient le code maveillant, le script nous retourne les données 
+- on peut exécuter des commandes : play sound, webcam, ... et accéder à des informations comme cookies, plug-ins installés, log de ce qui est fait sur le site...
+- possibilité de faire ses propres modules, regarder ce qui a été fait comme c'est de l'open source
+- persistence : faire que ça fonctionne même quand l'onglet est fermé
 

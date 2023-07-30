@@ -33,6 +33,8 @@ Faille XSS (=cross-site scripting) : dans une page web on a donc du HTML, CSS, J
 - reflected = injects scripts that are sent to server and then bounce back to user
 - DOM-based = executed completly on the client side nothing to do with the server
 
+Essayer de tester un exemple d'xxs : https://www.0x0ff.info/2021/attaque-cote-client-xss-et-phishing/
+
 ## 1. Fonctionnement des navigateurs
 
 Qu'est-ce qu'ils exécutent en badground ? Comment ? Tout le process où une page s'affiche 

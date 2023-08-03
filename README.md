@@ -41,13 +41,10 @@ Dans une page web on a donc du HTML, CSS, Javascript.
 - HTML =  langage de balise, qui permet de s'occuper du contenu du site (bouttons, menu, texte, vidéos, images, ...)
 - CSS = langage de feuille de style, permet de styliser, mettre en forme le contenu (forme des menus, couleurs, polices d'écriture, ...)
 - Javascript = langage qui permet de rendre les sites web interactifs
-- React = javascript library
+- React (=Angular JS, VueJS) = javascript library
 - Nodejs = logiciel qui permet d'executer des applications javascript
-
-- PHP =  
-- Symfony = framework
-- Ruby = 
-
+- PHP = 
+- Symfony (=Laravel) = framework PHP
 
 ```
 Créer le premier site :
@@ -94,7 +91,7 @@ structure de base d'une page HMTL :
 
 ## 2. Fonctionnement d'une requête HTTP
 
-Quand on demande une page web on fait une requête HTTP. Le navigateur (client) fait la requête HTTP. Le serveur web sert les pages web au client, renvoie les fichiers qui contiennent du code (HTML donne la structure de la page, CSS la mise en forme, Javascript gère l'intéractivité avec l'internaute : les clics de l'internaute sont récupérés par le Javascript et des traitements sont déclenchés). Ils communiquent via le protocole HTTP
+Quand on demande une page web on fait une requête HTTP. Le navigateur (client) fait la requête HTTP. Le serveur web sert les pages web au client, renvoie les fichiers qui contiennent du code (HTML donne la structure de la page, CSS la mise en forme, Javascript gère l'intéractivité avec l'internaute : les clics de l'internaute sont récupérés par le Javascript et des traitements sont déclenchés). Ils communiquent via le protocole HTTP.
 
 
 Du côté du serveur : 
@@ -109,39 +106,34 @@ Quand on parle de serveur, on parle du hardware. Mais y a un certains nombre de 
 |serveur statique|un OS, et un serveur HTTP|
 |serveur dynamique|en + inclue une BDD et un langage de script comme PHP (= dont le rôle est d'interpréter les demandes du client et de les traduire en HTML)|
 
+![Capture d’écran 2023-08-03 à 18 30 54](https://github.com/iciamyplant/client_side_attack/assets/57531966/351c38cc-3bf5-4f8c-ab66-d700fbe08e6e)
 
 
 
+Du côté du navigateur : 
 
-
-
-
-
-
-
-Fonctionnement des navigateurs
-
-Qu'est-ce qu'ils exécutent en badground ? Comment ? Tout le process où une page s'affiche 
+- Format de la requete ? Protocole HTTP ?
+- Format du retour du code HTML, CSS etc
+- Comment le code est exécuté, où ?
+- Qu'est-ce que le navigateur exécute en badground ?
 
 Les navigateurs tels qu'Internet Explorer et Firefox sont en fait un ensemble de logiciels : le navigateur lui-même, plus des logiciels tiers tels qu'Adobe Acrobat Reader, Adobe Flash, iTunes, QuickTime, RealPlayer, etc. Tous sont potentiellement vulnérables aux attaques côté client. 
 
 
 
+## 3. Sites vulnérables
+
+[OWASP Top 10 most critical security risks to web applications](https://owasp.org/www-project-top-ten/)
+
+De manière générale, tout ce qui vient de l’extérieur − saisi par un être humain dans un formulaire, ou bien reçu lors d’un appel à un webservice externe − doit être traité de manière particulière. [14 règles à suivre selon OWASP pour la prévention des failles XSS](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md). [Résumé des préventions] (https://www.geek-directeur-technique.com/2020/04/04/les-failles-de-securite-de-base-dans-le-web-2-le-cross-site-scripting-xss)
+
+- du code en quels langages peut-on injecter ? php, JS, ...
+- comment le développeur est-il censé protéger ? cas le plus courant de ces vulnérabilités se produit lorsque des variables GET sont imprimées ou renvoyées en écho sans filtrage ni vérification de leur contenu
+- exemples de sites et de non-protection. [démo video](https://www.youtube.com/watch?v=E47rY21gXSY) Exemples : https://www.0x0ff.info/2021/attaque-cote-client-xss-et-phishing/
 
 
-## 2. Sites vulnérables
 
-unprotected input
-
-Essayer de tester un exemple d'xxs : https://www.0x0ff.info/2021/attaque-cote-client-xss-et-phishing/
-
-Le code HTML d'un champ de recherche : <input value="*search value here*">
-Maintenant, si vous insérez " onmouseover="alert(1), le HTML final serait <input value="" onmouseover="alert(1)"> Lorsque la souris est passée sur la zone de recherche, "l'alerte" sera exécutée .
-
-cas le plus courant de ces vulnérabilités se produit lorsque des variables GET sont imprimées ou renvoyées en écho sans filtrage ni vérification de leur contenu
-
-
-## 3. Malicious code
+## 4. Malicious code
 
 Que fait le code malicieux que j'injecte ? 
 - steal cookies
@@ -152,6 +144,14 @@ Que fait le code malicieux que j'injecte ?
 
 
 [vidéo explication](https://www.youtube.com/watch?v=TVBMqQGLCYM)
+
+
+
+----------------
+
+How 22 Lines of Code Claimed 380,000 Victims. How We Used Machine Learning to to Pinpoint the Magecart Crime Syndicate.
+[whole explanation of british airways xss exploitation](https://schoenbaum.medium.com/inside-the-breach-of-british-airways-how-22-lines-of-code-claimed-380-000-victims-8ce1582801a0)
+
 
 
 ## II - Etapes avec BeEF-xss

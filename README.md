@@ -53,8 +53,30 @@ Créer un projet de mon premier site :
 
 structure de base d'une page HMTL : 
 ```
-<html>
-</hmtl>
+<!doctype html> <!--declaration du document, doc HTML-->
+<html> <!--balise qui contient l'ensemble de la page, et dedans y a deux sous balises-->
+<head> <!--Premiere sous balise, tete de page-->
+    <title>Texte</title> <!--balise par defaut, titre de la page qui saffiche sur longlet-->
+    <!-- tout ce qui sera interne au site mais sans le voir, refereencement du site, liaison avec les feuilles de style css,..-->
+    <meta charset="utf-8"> <!--charset est l'attribut de la balise-->
+    <link rel="stylesheet" type="text/css" href="css/styles.css"> <!--link permet de faire une relation avec un fichier, attribut relation definit le type de relaiton, ici une feuille de style. Type de document, et ensuite href chemin pour acceder-->
+</head>
+<body> <!--contient tout le contenu-->
+    <h1> <!--headline1, c'est le gros titre de la page-->
+        coucou
+    </h1>
+    <h2> <!--ca va jusqu'à h6-->
+        voilà ma page
+    </h2>
+    <p> <!--balise paragraphe--> 
+        Bienvenue sur mon site le sang
+    </p>
+    <a href="http://google.com/" target="_BLANK">Lien Vers Google
+    </a><!--balise pr integrer des liens, target="_BLANK" permet de dire qu'il ouvre le lien dans une nouvelle page blanche, autre onglet --> 
+    <img src="img/TheEnd.jpeg">
+    <img src="img/allolaterre.png" width="200">
+</body>
+</html>
 ```
 
 

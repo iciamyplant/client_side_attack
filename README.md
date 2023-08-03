@@ -7,7 +7,7 @@
 
 L'objectif étant de cibler les vulnérabilités de l'appareil client ou d'un ou plusieurs de ses logiciels (comprennent des logiciels de traitement de texte, lecteur PDF, des navigateurs Web, environnement Java, etc). Dans le but d’obtenir des informations sensibles (cookies, identifiants, numéro de CB, etc.) ou carrément de prendre le contrôle des postes de travail infectés.
 
-Exemple : les attaquants peuvent exploiter une vulnérabilité d'un serveur web pour exécuter des scripts malicieux dans l'ordinateur de victimes et voler leurs données sensibles
+Exemple : les attaquants peuvent exploiter une vulnérabilité d'un serveur web pour exécuter des scripts malicieux dans l'ordinateur de victimes et voler leurs données sensibles. 
 
 Types de client-side attacks : cross-site scripting (xss), cross-site request forgery (csrf), content spoofing, session fixation, clickjacking
 
@@ -21,21 +21,28 @@ Types de client-side attacks : cross-site scripting (xss), cross-site request fo
 
 # I. Failles XSS
 
-Faille XSS (=cross-site scripting) : dans une page web on a donc du HTML, CSS, Javascript. On a deux côtés : le côté client, qui voit la page, et le côté serveur. Le client et le serveur communiquent. Un personne peut prendre la page, et ajouter du JS (ou du HTML) dedans si pas protégé. Par exemple le pirate peut écrire un commentaire sur un blog, où il va mettre du JS qui fait une XSS. Et la prochaine fois qu'un mec va venir sur le blog, il va charger la page, qui contient le commentaire en JS (c'est une stored XSS) et le code malveillant va s'executer. Ce XSS va se déclencher pour chacun des utilisteurs légitimes qui vont charger la page après l'injection du JS. Donc une faille xss c'est la possibilité pour un attaquant d'injecter du code javascript, ou html, qu'on va en tant que victime, exécuter à notre ainsu. [Exemple d'exploitation faille XSS](https://www.youtube.com/watch?v=iHcXH8eByDA)
-
-`````
-// dans index.php 'Name' n'est pas protégé
-// possibilité d'injecter du code
-`````
+Faille XSS (=cross-site scripting) : vulnérabilité de sécurité des pages Web dynamiques, où il y a possibilité pour un attaquant d'injecter du code javascript, ou html, dans une page web qu'on va en tant que victime, exécuter à notre ainsu.
 
 3 catégories de XSS : 
 - stored (persistent) = injects scripts that remain on the server
 - reflected = injects scripts that are sent to server and then bounce back to user
 - DOM-based = executed completly on the client side nothing to do with the server
 
-Essayer de tester un exemple d'xxs : https://www.0x0ff.info/2021/attaque-cote-client-xss-et-phishing/
+`````
+// dans index.php 'Name' n'est pas protégé
+// possibilité d'injecter du code
+`````
 
-## 1. Fonctionnement des navigateurs
+Exemple : l'attaquant peut écrire un commentaire sur un blog, où il va mettre du JS qui fait une XSS. Et la prochaine fois qu'un mec va venir sur le blog, il va charger la page, qui contient le commentaire en JS (c'est une stored XSS) et le code malveillant va s'executer. Ce XSS va se déclencher pour chacun des utilisteurs légitimes qui vont charger la page après l'injection du JS. [Exemple d'exploitation faille XSS](https://www.youtube.com/watch?v=iHcXH8eByDA)
+
+
+## 1. Bases du développement web
+
+Dans une page web on a donc du HTML, CSS, Javascript. 
+
+
+
+## 2. Fonctionnement des navigateurs
 
 Qu'est-ce qu'ils exécutent en badground ? Comment ? Tout le process où une page s'affiche 
 
@@ -45,9 +52,19 @@ Serveur web : sert les pages web au client. Le client (navigateur) fait une dema
 - statique : un OS, et un serveur HTTP (= logiciel qui prend en charge les requettes client/serveur du protocole HTTP, ex : Apache, 2is, Nginx)
 - dynamique : en + inclue une BDD et un langage de script comme PHP (= dont le rôle est d'interpréter les demandes du client et de les traduire en HTML)
 
+
+
 ## 2. Sites vulnérables
 
 unprotected input
+
+Essayer de tester un exemple d'xxs : https://www.0x0ff.info/2021/attaque-cote-client-xss-et-phishing/
+
+Le code HTML d'un champ de recherche : <input value="*search value here*">
+Maintenant, si vous insérez " onmouseover="alert(1), le HTML final serait <input value="" onmouseover="alert(1)"> Lorsque la souris est passée sur la zone de recherche, "l'alerte" sera exécutée .
+
+cas le plus courant de ces vulnérabilités se produit lorsque des variables GET sont imprimées ou renvoyées en écho sans filtrage ni vérification de leur contenu
+
 
 ## 3. Malicious code
 

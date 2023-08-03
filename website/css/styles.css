@@ -1,0 +1,8 @@
+p.welcome{
+   /*p ==> correspond à la balise <p> du index.html, tout ce qu'on met ici va permettre de personnaliser cette balise*/ 
+   color: greenyellow; /*c'est une propriété css ca s'appelle*/
+}
+
+p.commecheztoi{
+   color: palevioletred;
+}

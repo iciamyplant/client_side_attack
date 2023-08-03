@@ -44,6 +44,11 @@ Dans une page web on a donc du HTML, CSS, Javascript.
 - React = javascript library
 - Nodejs = logiciel qui permet d'executer des applications javascript
 
+- PHP =  
+- Symfony = framework
+- Ruby = 
+
+
 ```
 Créer le premier site :
 /img = on range les images du site
@@ -80,20 +85,56 @@ structure de base d'une page HMTL :
 </html>
 ```
 
+CSS
+```
+p.welcome{
+   /*p ==> correspond à la balise <p> du index.html, tout ce qu'on met ici va permettre de personnaliser cette balise*/ 
+   color: greenyellow; /*c'est une propriété css ca s'appelle*/
+}
+
+p.commecheztoi{
+   color: palevioletred;
+}
+```
+
+
+
+
 [Tuto de Graven pour HTML](https://www.youtube.com/watch?v=J9w-cir5a6U&t=425s)
 [Playlist Graven web : HTML, CSS, PHP](https://www.youtube.com/playlist?list=PLMS9Cy4Enq5JAzNgWPK96HnkE_U7Ol3im)
 [Tuto de Graven pour créer un site avec React & Nodejs](https://www.youtube.com/watch?v=yHoI0n2VxMU)
 
 
-## 2. Fonctionnement des navigateurs
+## 2. Fonctionnement d'une requête HTTP
+
+Quand on demande une page web on fait une requête HTTP.
+- Le navigateur (client) fait la requête HTTP
+- Le serveur web sert les pages web au client, renvoie les fichiers qui contiennent du code (HTML donne la structure de la page, CSS la mise en forme, Javascript gère l'intéractivité avec l'internaute : les clics de l'internaute sont récupérés par le Javascript et des traitements sont déclenchés)
+- Ils communiquent via le protocole HTTP
+
+
+
+Du côté du serveur : 
+
+Quand on parle de serveur, on parle du hardware. Mais y a un certains nombre de programmes qui tournent sur le serveur qu'on appelle aussi serveurs, car ils répondent à des requetes.
+- serveur HTTP : logiciel qui prend en charge les requettes client/serveur du protocole HTTP, ex : Apache, 2is, Nginx
+- serveur Mysql : s'adresse au système de fichier pour récupérer des données
+- serveur FTP : quand le dev a fini sa page web, il l'envoie sur le serveur hardware par l'intermédiaire du serveur ftp
+
+|Type de serveur|Def|
+|----|-----|
+|serveur statique|un OS, et un serveur HTTP|
+|serveur dynamique|en + inclue une BDD et un langage de script comme PHP (= dont le rôle est d'interpréter les demandes du client et de les traduire en HTML)|
+
+
+
+Fonctionnement des navigateurs
 
 Qu'est-ce qu'ils exécutent en badground ? Comment ? Tout le process où une page s'affiche 
 
 Les navigateurs tels qu'Internet Explorer et Firefox sont en fait un ensemble de logiciels : le navigateur lui-même, plus des logiciels tiers tels qu'Adobe Acrobat Reader, Adobe Flash, iTunes, QuickTime, RealPlayer, etc. Tous sont potentiellement vulnérables aux attaques côté client. 
 
-Serveur web : sert les pages web au client. Le client (navigateur) fait une demande de page web au serveur, qui lui envoie la page demandée, ils communiquent via le protocole HTTP. C'est un serveur informatique qui permet de stocker et publier des pages web, générallement écrites en HTML. Au niveau matériel : ordinateur qui stocke des fichiers qui constituent une page web (documents HTML, images, fichiers JS...). Au niveau logiciel : 
-- statique : un OS, et un serveur HTTP (= logiciel qui prend en charge les requettes client/serveur du protocole HTTP, ex : Apache, 2is, Nginx)
-- dynamique : en + inclue une BDD et un langage de script comme PHP (= dont le rôle est d'interpréter les demandes du client et de les traduire en HTML)
+
 
 
 

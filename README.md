@@ -38,7 +38,26 @@ Exemple : l'attaquant peut écrire un commentaire sur un blog, où il va mettre 
 
 ## 1. Bases du développement web
 
-Dans une page web on a donc du HTML, CSS, Javascript. 
+Dans une page web on a donc du HTML, CSS, Javascript.
+
+HTML =  langage de balise, qui permet de s'occuper du contenu du site (bouttons, menu, texte, vidéos, images, ...)
+CSS = langage de feuille de style, permet de styliser, mettre en forme le contenu (forme des menus, couleurs, polices d'écriture, ...)
+Javascript = langage qui permet de rendre les sites web interactifs
+React = javascript library
+Nodejs = logiciel qui permet d'executer des applications javascript
+
+
+Créer un projet de mon premier site : 
+- dossier img : on range les images du site
+- dossier css : on a range les feuilles de style
+- dossier js : pour les animations
+- fichier index.hmtl à la racine = page principale de notre site web, première page sur laquelle les utilisateurs arrivent
+
+structure de base d'une page HMTL : 
+```
+<html>
+</hmtl>
+```
 
 
 

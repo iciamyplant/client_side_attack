@@ -38,18 +38,19 @@ Exemple : l'attaquant peut écrire un commentaire sur un blog, où il va mettre 
 
 Dans une page web on a donc du HTML, CSS, Javascript.
 
-HTML =  langage de balise, qui permet de s'occuper du contenu du site (bouttons, menu, texte, vidéos, images, ...)
-CSS = langage de feuille de style, permet de styliser, mettre en forme le contenu (forme des menus, couleurs, polices d'écriture, ...)
-Javascript = langage qui permet de rendre les sites web interactifs
-React = javascript library
-Nodejs = logiciel qui permet d'executer des applications javascript
+- HTML =  langage de balise, qui permet de s'occuper du contenu du site (bouttons, menu, texte, vidéos, images, ...)
+- CSS = langage de feuille de style, permet de styliser, mettre en forme le contenu (forme des menus, couleurs, polices d'écriture, ...)
+- Javascript = langage qui permet de rendre les sites web interactifs
+- React = javascript library
+- Nodejs = logiciel qui permet d'executer des applications javascript
 
-
-Créer un projet de mon premier site : 
-- dossier img : on range les images du site
-- dossier css : on a range les feuilles de style
-- dossier js : pour les animations
-- fichier index.hmtl à la racine = page principale de notre site web, première page sur laquelle les utilisateurs arrivent
+```
+Créer le premier site :
+/img = on range les images du site
+/dossier css = on a range les feuilles de style
+/dossier js = pour les animations
+index.hmtl = page principale de notre site web, première page sur laquelle les utilisateurs arrivent
+```
 
 structure de base d'une page HMTL : 
 ```
@@ -79,6 +80,9 @@ structure de base d'une page HMTL :
 </html>
 ```
 
+[Tuto de Graven pour HTML](https://www.youtube.com/watch?v=J9w-cir5a6U&t=425s)
+[Playlist Graven web : HTML, CSS, PHP](https://www.youtube.com/playlist?list=PLMS9Cy4Enq5JAzNgWPK96HnkE_U7Ol3im)
+[Tuto de Graven pour créer un site avec React & Nodejs](https://www.youtube.com/watch?v=yHoI0n2VxMU)
 
 
 ## 2. Fonctionnement des navigateurs

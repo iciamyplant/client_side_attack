@@ -7,8 +7,6 @@
 
 L'objectif étant de cibler les vulnérabilités de l'appareil client ou d'un ou plusieurs de ses logiciels (comprennent des logiciels de traitement de texte, lecteur PDF, des navigateurs Web, environnement Java, etc). Dans le but d’obtenir des informations sensibles (cookies, identifiants, numéro de CB, etc.) ou carrément de prendre le contrôle des postes de travail infectés.
 
-Exemple : les attaquants peuvent exploiter une vulnérabilité d'un serveur web pour exécuter des scripts malicieux dans l'ordinateur de victimes et voler leurs données sensibles. 
-
 Types de client-side attacks : cross-site scripting (xss), cross-site request forgery (csrf), content spoofing, session fixation, clickjacking
 
 

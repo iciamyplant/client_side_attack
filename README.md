@@ -89,12 +89,26 @@ structure de base d'une page HMTL :
 [Tuto de Graven pour créer un site avec React & Nodejs](https://www.youtube.com/watch?v=yHoI0n2VxMU)
 
 
-## 2. Fonctionnement d'une requête HTTP
+## 2. Fonctionnement d'une session HTTP
 
 Quand on demande une page web on fait une requête HTTP. Le navigateur (client) fait la requête HTTP. Le serveur web sert les pages web au client, renvoie les fichiers qui contiennent du code (HTML donne la structure de la page, CSS la mise en forme, Javascript gère l'intéractivité avec l'internaute : les clics de l'internaute sont récupérés par le Javascript et des traitements sont déclenchés). Ils communiquent via le protocole HTTP.
 
+#### a. Etape 1 : Requête HTTP du navigateur
 
-Du côté du serveur : 
+```
+clic droit sur la page du navigateur > inspecter l'élément > Onglet Network // permet de voir toutes les requêtes HTTP que fait notre navigateur
+```
+
+En tête de la requête HTTP : un état, une méthode (GET), une URL, le type du document, la taille du fichier, etc.
+
+
+
+
+#### b. Etape 2 : Réponse HTTP du serveur
+
+Réponse du serveur : on voit la page HTML
+
+- Format du retour du code HTML, CSS etc
 
 Quand on parle de serveur, on parle du hardware. Mais y a un certains nombre de programmes qui tournent sur le serveur qu'on appelle aussi serveurs, car ils répondent à des requetes.
 - serveur HTTP : logiciel qui prend en charge les requettes client/serveur du protocole HTTP, ex : Apache, 2is, Nginx
@@ -110,10 +124,9 @@ Quand on parle de serveur, on parle du hardware. Mais y a un certains nombre de 
 
 
 
-Du côté du navigateur : 
+#### c. Etape 3 : Affichage de la page par le navigateur
 
-- Format de la requete ? Protocole HTTP ?
-- Format du retour du code HTML, CSS etc
+
 - Comment le code est exécuté, où ?
 - Qu'est-ce que le navigateur exécute en badground ?
 

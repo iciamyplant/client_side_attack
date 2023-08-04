@@ -91,7 +91,7 @@ structure de base d'une page HMTL :
 
 ## 2. Fonctionnement d'une session HTTP
 
-Quand on demande une page web on fait une requête HTTP. Le navigateur (client) fait la requête HTTP. Le serveur web sert les pages web au client, renvoie les fichiers qui contiennent du code (HTML donne la structure de la page, CSS la mise en forme, Javascript gère l'intéractivité avec l'internaute : les clics de l'internaute sont récupérés par le Javascript et des traitements sont déclenchés). Ils communiquent via le protocole HTTP, utilisé dans le but de permettre un transfert de fichiers (essentiellement au format HTML) localisés grâce à une chaîne de caractères appelée URL
+Quand on demande une page web on fait une requête HTTP. Le navigateur (client) va d'abord établir une connexion avec le serveur. Ensuite le client fait la requête HTTP. Le serveur web renvoie les fichiers qui contiennent du code (HTML donne la structure de la page, CSS la mise en forme, Javascript gère l'intéractivité avec l'internaute : les clics de l'internaute sont récupérés par le Javascript et des traitements sont déclenchés). Ils communiquent via le protocole HTTP, utilisé dans le but de permettre un transfert de fichiers (essentiellement au format HTML) localisés grâce à une chaîne de caractères appelée URL
 
 ### a. Etape 1 : Requête HTTP du navigateur
 
@@ -141,10 +141,73 @@ Les différents types de requêtes sont définis par l’utilisation de méthode
 
 Exemple : On demande la chaîne YouTube, https://www.youtube.com/channel/UC9wzC5mFFcIdguoyveTo6Ng (Format des URLs : protocole://adresse-du-serveur:port/chemin/ressource). Clic droit sur la page du navigateur > inspecter l'élément > Onglet Network // permet de voir toutes les requêtes HTTP que fait notre navigateur.
 
-<img width="1435" alt="capturedecran2" src="https://github.com/iciamyplant/client_side_attack/assets/57531966/489639ea-0556-4140-98b2-8cc75d18e460">
+<img width="1438" alt="Capture d’écran 2023-08-04 à 16 06 43" src="https://github.com/iciamyplant/client_side_attack/assets/57531966/901f61f9-7ab4-43a5-820a-cf0558583259">
 
 
 ### b. Etape 2 : Réponse HTTP du serveur
+
+Réponse HTTP = ensemble de lignes envoyées au navigateur par le serveur. Comprend :
+- Une ligne de statut : précisant la version du protocole utilisé et l'état du traitement de la requête à l'aide d'un code et d'un texte explicatif. La ligne comprend trois éléments devant être séparés par un espace : La version du protocole utilisé, Le code de statut, La signification du code
+- Les champs d'en-tête de la réponse: il s'agit d'un ensemble de lignes facultatives permettant de donner des informations supplémentaires sur la réponse et/ou le serveur
+- Le corps de la réponse: il contient le document demandé
+
+```
+HTTP/1.1 200 OK[CRLF]
+Date: Thu, 24 Sep 2009 19:37:34 GMT[CRLF]
+Server: Apache/2.2.3[CRLF]
+Content-Length: 7234[CRLF]
+Content-Type: text/html; charset=UTF-8[CRLF]
+[CRLF]
+[ici se trouve le corps (body) de la réponse]
+```
+
+La première ligne de la réponse contient toujours le 'code' HTTP indiquant si la requête a réussi ou pas. Puis, comme pour la réponse, on trouve les lignes des champs HTTP. Tout ceci constitue l'en-tête de la réponse. Ensuite se trouve le corps de la réponse, qui dans le cas d'un GET d'un fichier HTML contient par exemple le code HTML de la page visée.
+
+Exemple : Le serveur renvoie la page HTML
+
+<img width="1439" alt="Capture d’écran 2023-08-04 à 16 07 27" src="https://github.com/iciamyplant/client_side_attack/assets/57531966/92499e9f-2e74-45fe-a368-b2c349c782d8">
+
+
+
+
+### c. Etape 3 : Traitement de la réponse HTTP par le navigateur
+
+Quand il recoit le premier bloc de données, parse les infos pour les transformer en DOM (=transforme le fichier HTML en objets JS) et CSSOM, utilisés par le moteur de rendu.
+Le DOM est la représentation interne du balisage pour le navigateur. Le DOM est également exposé et peut être manipulé via diverses API en JavaScript.
+
+cinq étapes dans le chemin de rendu : 
+1. traiter le balisage HTML et créer l'arborescence DOM. L'analyse HTML implique la création de jetons, tokenization, et la construction du DOM tree. Les jetons HTML incluent les balises de début et de fin, ainsi que les noms et les valeurs des attributs. Si le document est bien formé, son analyse est simple et rapide. L'analyseur analyse les entrées sous forme de jetons dans le document, créant ainsi le document tree.
+2. Le DOM tree décrit le contenu du document. L'élément <html> est la première balise et le premier nœud racine du document tree. L'arbre reflète les relations et les hiérarchies entre différentes balises. Les balises imbriquées dans d'autres balises sont des nœuds enfants. Plus le nombre de nœuds DOM est élevé, le plus de temps ca prends pour construire le DOM tree.
+
+
+
+
+
+
+chaque node du DOM, on va pouvoir faire des choses dessus, il faut voir le DOM comme une API JS sur lequel on peut communiquer pour modifier des trucs. get element.id, 
+
+
+
+
+---------
+
+- Qu'est-ce que le navigateur exécute en badground ?
+
+Les navigateurs tels qu'Internet Explorer et Firefox sont en fait un ensemble de logiciels : le navigateur lui-même, plus des logiciels tiers tels qu'Adobe Acrobat Reader, Adobe Flash, iTunes, QuickTime, RealPlayer, etc. Tous sont potentiellement vulnérables aux attaques côté client. 
+
+[cours sur les session HTTP](https://www.pierre-giraud.com/http-reseau-securite-cours/requete-reponse-session/)
+[cours sur le traitement de la réponse HTTP par le navigateur](https://developer.mozilla.org/fr/docs/Web/Performance/How_browsers_work)
+
+
+
+
+---------
+
+Mais attention : Les requêtes HTTP sont formulées par le client (c’est-à-dire dans la majorité des cas le navigateur de vos visiteurs) et vous n’avez donc quasiment aucun contrôle dessus. Idem, les réponses HTTP sont créées par le serveur et vont en grande partie dépendre de la configuration de celui-ci. En fonction de votre hébergeur et de votre formule d’hébergement, vous allez avoir plus ou moins de contrôle sur la configuration de votre espace serveur.
+
+
+
+## 3. Configurer un serveur HTTP
 
 Quand on parle de serveur, on parle du hardware. Mais y a un certains nombre de programmes qui tournent sur le serveur qu'on appelle aussi serveurs, car ils répondent à des requetes.
 - serveur HTTP : logiciel qui prend en charge les requettes client/serveur du protocole HTTP, ex : Apache, 2is, Nginx
@@ -156,32 +219,20 @@ Quand on parle de serveur, on parle du hardware. Mais y a un certains nombre de 
 |serveur statique|un OS, et un serveur HTTP|
 |serveur dynamique|en + inclue une BDD et un langage de script comme PHP (= dont le rôle est d'interpréter les demandes du client et de les traduire en HTML)|
 
-
-
-
-
-
-
-
-
-
-
-- Format du retour du code HTML, CSS etc
-
-
 ![Capture d’écran 2023-08-03 à 18 30 54](https://github.com/iciamyplant/client_side_attack/assets/57531966/351c38cc-3bf5-4f8c-ab66-d700fbe08e6e)
 
 
 
-#### c. Etape 3 : Affichage de la page par le navigateur
 
 
-- Comment le code est exécuté, où ?
-- Qu'est-ce que le navigateur exécute en badground ?
 
-Les navigateurs tels qu'Internet Explorer et Firefox sont en fait un ensemble de logiciels : le navigateur lui-même, plus des logiciels tiers tels qu'Adobe Acrobat Reader, Adobe Flash, iTunes, QuickTime, RealPlayer, etc. Tous sont potentiellement vulnérables aux attaques côté client. 
 
-[cours sur les session HTTP](https://www.pierre-giraud.com/http-reseau-securite-cours/requete-reponse-session/)
+
+
+
+
+
+
 
 ## 3. Sites vulnérables
 

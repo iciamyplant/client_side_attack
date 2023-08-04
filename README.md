@@ -91,24 +91,60 @@ structure de base d'une page HMTL :
 
 ## 2. Fonctionnement d'une session HTTP
 
-Quand on demande une page web on fait une requête HTTP. Le navigateur (client) fait la requête HTTP. Le serveur web sert les pages web au client, renvoie les fichiers qui contiennent du code (HTML donne la structure de la page, CSS la mise en forme, Javascript gère l'intéractivité avec l'internaute : les clics de l'internaute sont récupérés par le Javascript et des traitements sont déclenchés). Ils communiquent via le protocole HTTP.
+Quand on demande une page web on fait une requête HTTP. Le navigateur (client) fait la requête HTTP. Le serveur web sert les pages web au client, renvoie les fichiers qui contiennent du code (HTML donne la structure de la page, CSS la mise en forme, Javascript gère l'intéractivité avec l'internaute : les clics de l'internaute sont récupérés par le Javascript et des traitements sont déclenchés). Ils communiquent via le protocole HTTP, utilisé dans le but de permettre un transfert de fichiers (essentiellement au format HTML) localisés grâce à une chaîne de caractères appelée URL
 
-#### a. Etape 1 : Requête HTTP du navigateur
+### a. Etape 1 : Requête HTTP du navigateur
+
+Requête HTTP = ensemble de lignes envoyé au serveur par le navigateur. Comprend :
+- Une ligne de requête: c'est une ligne précisant le type de document demandé, la méthode qui doit être appliquée, et la version du protocole utilisée (généralement HTTP/1.0). La ligne comprend ces trois éléments devant être séparés par un espace.
+- Les champs d'en-tête de la requête: un ensemble de lignes facultatives permettant de donner des informations supplémentaires sur la requête et/ou le client (Navigateur, système d'exploitation, ...). Chacune de ces lignes est composée d'un nom qualifiant le type d'en-tête, suivi de deux points : et de la valeur de l'en-tête
+- Le corps de la requête: c'est un ensemble de lignes optionnelles devant être séparées des lignes précédentes par une ligne vide et permettant par exemple un envoi de données par une commande POST lors de l'envoi de données au serveur par un formulaire
+
 
 ```
-clic droit sur la page du navigateur > inspecter l'élément > Onglet Network // permet de voir toutes les requêtes HTTP que fait notre navigateur
+GET /fichier.html HTTP/1.1[CRLF]
+Host: www.monsite.com[CRLF]
+User-Agent: Mozilla/5.0 Safari/531.9[CRLF]
+[CRLF]
 ```
 
-En tête de la requête HTTP : un état, une méthode (GET), une URL, le type du document, la taille du fichier, etc.
+```
+----- Ligne de requête -----
+GET /fichier.html HTTP/1.1[CRLF] // ici on demande le document fichier.html avec la méthode GET et la version HTTP/1.1 + CRLF = délimiteur utilisé par le protocole HTTP pour séparer les lignes de l'en-tête
+
+----- champs http ou en-têtes http (facultatives) -----
+Host: www.monsite.com[CRLF] // champ http avec comme valeur www.monsite.com
+User-Agent: Mozilla/5.0 Safari/531.9[CRLF] // champ http User-Agent avec comme valeur Mozilla/5.0 Safari/531.9, donne des informations sur le client
+
+----- ligne vierge -----
+[CRLF]
+
+----- corps (facultatif) -----
+// pas de corps ici mais pour les requetes POST y en a un par exemple
+```
+
+Les différents types de requêtes sont définis par l’utilisation de méthodes HTTP différentes. Ces méthodes HTTP permettent d’indiquer au serveur quelle opération le client souhaite effectuer. Le méthode GET par exemple permet d’indiquer qu’on souhaite récupérer une ressource, tandis que POST est utilisée pour transmettre des données en vue d’un traitement à une ressource, DELETE est utilisée pour indiquer qu’on souhaite supprimer une ressource, etc.
+
+| méthode|utilité|
+|---|---|
+|GET|permet de demander une ressource sans la modifier |
+|POST|permet de transmettre des données dans le but de manipuler une ressource|
+|PUT|permet de remplacer ou d’ajouter une ressource sur le serveur|
+|DELETE|permet de supprimer une ressource du serveur |
+|HEAD|permet de demander des informations sur la ressource sans demander la ressource elle-même|
+|PATCH|permet de modifier partiellement une ressource|
+|OPTIONS |permet d’obtenir les options de communication d’une ressource ou du serveur|
+|CONNECT|permet d’utiliser un proxy comme un tunnel de communication|
+|TRACE|permet de tester et d’effectuer un diagnostic de la connexion et demandant au serveur de retourner la requête reçue|
 
 
 
+Exemple : On demande la chaîne YouTube, https://www.youtube.com/channel/UC9wzC5mFFcIdguoyveTo6Ng (Format des URLs : protocole://adresse-du-serveur:port/chemin/ressource). Clic droit sur la page du navigateur > inspecter l'élément > Onglet Network // permet de voir toutes les requêtes HTTP que fait notre navigateur.
 
-#### b. Etape 2 : Réponse HTTP du serveur
+<img width="1435" alt="capturedecran2" src="https://github.com/iciamyplant/client_side_attack/assets/57531966/489639ea-0556-4140-98b2-8cc75d18e460">
 
-Réponse du serveur : on voit la page HTML
 
-- Format du retour du code HTML, CSS etc
+### b. Etape 2 : Réponse HTTP du serveur
 
 Quand on parle de serveur, on parle du hardware. Mais y a un certains nombre de programmes qui tournent sur le serveur qu'on appelle aussi serveurs, car ils répondent à des requetes.
 - serveur HTTP : logiciel qui prend en charge les requettes client/serveur du protocole HTTP, ex : Apache, 2is, Nginx
@@ -119,6 +155,19 @@ Quand on parle de serveur, on parle du hardware. Mais y a un certains nombre de 
 |----|-----|
 |serveur statique|un OS, et un serveur HTTP|
 |serveur dynamique|en + inclue une BDD et un langage de script comme PHP (= dont le rôle est d'interpréter les demandes du client et de les traduire en HTML)|
+
+
+
+
+
+
+
+
+
+
+
+- Format du retour du code HTML, CSS etc
+
 
 ![Capture d’écran 2023-08-03 à 18 30 54](https://github.com/iciamyplant/client_side_attack/assets/57531966/351c38cc-3bf5-4f8c-ab66-d700fbe08e6e)
 
@@ -132,7 +181,7 @@ Quand on parle de serveur, on parle du hardware. Mais y a un certains nombre de 
 
 Les navigateurs tels qu'Internet Explorer et Firefox sont en fait un ensemble de logiciels : le navigateur lui-même, plus des logiciels tiers tels qu'Adobe Acrobat Reader, Adobe Flash, iTunes, QuickTime, RealPlayer, etc. Tous sont potentiellement vulnérables aux attaques côté client. 
 
-
+[cours sur les session HTTP](https://www.pierre-giraud.com/http-reseau-securite-cours/requete-reponse-session/)
 
 ## 3. Sites vulnérables
 

@@ -204,20 +204,26 @@ Essayons de créer des failles xss simples, en codant nous même des mini sites 
 - du code en quels langages peut-on injecter ? php, JS, ...
 - exemples de sites et de non-protection. [démo video](https://www.youtube.com/watch?v=E47rY21gXSY) Exemples : https://www.0x0ff.info/2021/attaque-cote-client-xss-et-phishing/
 
+cas le plus courant de ces vulnérabilités se produit lorsque des variables GET sont imprimées ou renvoyées en écho sans filtrage ni vérification de leur contenu
 
 
 
+# II - Contre-mesures
 
-# II - Contre-mesures 
+## 1. Sanitization
 
-- comment le développeur est-il censé protéger ? cas le plus courant de ces vulnérabilités se produit lorsque des variables GET sont imprimées ou renvoyées en écho sans filtrage ni vérification de leur contenu
+- Quels sont les contre-mesures mises en place par les dev web ? ces mesures de protection = sanitization
 
 De manière générale, tout ce qui vient de l’extérieur − saisi par un être humain dans un formulaire, ou bien reçu lors d’un appel à un webservice externe − doit être traité de manière particulière. [14 règles à suivre selon OWASP pour la prévention des failles XSS](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md). [Résumé des préventions] (https://www.geek-directeur-technique.com/2020/04/04/les-failles-de-securite-de-base-dans-le-web-2-le-cross-site-scripting-xss)
 
+## 2. Bypass les mesures
 
+- Quelles sont les techniques pour by-pass ces protections ?
+- quels sont les payloads JS qui permettent de bypasser la plupart des contournements
+- Voir comment bypasser telle ou telle fonctionnalité mise en place pour protéger le site web d'une attaque xss
 
-
-
+[How to Bypass XSS Filters: A Practical Example](https://infosecwriteups.com/how-to-bypass-xss-filters-a-practical-example-3189877fe2ce)
+[bypass](https://www.secjuice.com/xss-arithmetic-operators-chaining-bypass-sanitization/)
 
 
 

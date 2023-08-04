@@ -12,9 +12,9 @@ Types de client-side attacks : cross-site scripting (xss), cross-site request fo
 
 ## plan
 ### I - Failles XSS
-### II - Etapes avec BeEF-xss
+### II - Protection
+### III - BeEF-xss
 ### III - En pratique
-### IV - JSshell
 
 
 # I. Failles XSS
@@ -26,12 +26,12 @@ Faille XSS (=cross-site scripting) : vulnérabilité de sécurité des pages Web
 - reflected = injects scripts that are sent to server and then bounce back to user
 - DOM-based = executed completly on the client side nothing to do with the server
 
+Exemple : l'attaquant peut écrire un commentaire sur un blog, où il va mettre du JS qui fait une XSS. Et la prochaine fois qu'un mec va venir sur le blog, il va charger la page, qui contient le commentaire en JS (c'est une stored XSS) et le code malveillant va s'executer. Ce XSS va se déclencher pour chacun des utilisteurs légitimes qui vont charger la page après l'injection du JS. [Exemple d'exploitation faille XSS](https://www.youtube.com/watch?v=iHcXH8eByDA)
+
 `````
 // dans index.php 'Name' n'est pas protégé
 // possibilité d'injecter du code
 `````
-
-Exemple : l'attaquant peut écrire un commentaire sur un blog, où il va mettre du JS qui fait une XSS. Et la prochaine fois qu'un mec va venir sur le blog, il va charger la page, qui contient le commentaire en JS (c'est une stored XSS) et le code malveillant va s'executer. Ce XSS va se déclencher pour chacun des utilisteurs légitimes qui vont charger la page après l'injection du JS. [Exemple d'exploitation faille XSS](https://www.youtube.com/watch?v=iHcXH8eByDA)
 
 
 ## 1. Bases du développement web
@@ -169,35 +169,21 @@ Exemple : Le serveur renvoie la page HTML
 
 
 
-
 ### c. Etape 3 : Traitement de la réponse HTTP par le navigateur
 
-Quand il recoit le premier bloc de données, parse les infos pour les transformer en DOM (=transforme le fichier HTML en objets JS) et CSSOM, utilisés par le moteur de rendu.
-Le DOM est la représentation interne du balisage pour le navigateur. Le DOM est également exposé et peut être manipulé via diverses API en JavaScript.
+Quand il recoit le premier bloc de données, parse les infos pour les transformer en DOM (=transforme le fichier HTML en objets JS) et CSSOM, utilisés par le moteur de rendu. Chaque navigateur est constitué d'un moteur de rendu qui permet d'afficher une page web (Chrome et Blink, Safari et webkit, ...). Le DOM est la représentation interne du balisage pour le navigateur. Le DOM est également exposé et peut être manipulé via diverses API en JavaScript.
 
-cinq étapes dans le chemin de rendu : 
-1. traiter le balisage HTML et créer l'arborescence DOM. L'analyse HTML implique la création de jetons, tokenization, et la construction du DOM tree. Les jetons HTML incluent les balises de début et de fin, ainsi que les noms et les valeurs des attributs. Si le document est bien formé, son analyse est simple et rapide. L'analyseur analyse les entrées sous forme de jetons dans le document, créant ainsi le document tree.
-2. Le DOM tree décrit le contenu du document. L'élément <html> est la première balise et le premier nœud racine du document tree. L'arbre reflète les relations et les hiérarchies entre différentes balises. Les balises imbriquées dans d'autres balises sont des nœuds enfants. Plus le nombre de nœuds DOM est élevé, le plus de temps ca prends pour construire le DOM tree.
+cinq étapes dans le chemin de rendu en 3 étapes : PARSING, RENDU, INTERACTIVITE : 
+1. traiter le balisage HTML et créer l'arborescence DOM. Le DOM tree décrit le contenu du document. L'élément <html> est la première balise et le premier nœud racine du document tree. L'arbre reflète les relations et les hiérarchies entre différentes balises. Les balises imbriquées dans d'autres balises sont des nœuds enfants. Plus le nombre de nœuds DOM est élevé, le plus de temps ca prends pour construire le DOM tree
+2. scanner de préchargement analysera le contenu disponible et demandera des ressources hautement prioritaires telles que CSS, JavaScript et les polices. Grâce à l'analyseur de précharge, il n'est pas nécessaire d'attendre que l'analyseur trouve une référence à une ressource externe pour la demander
+3. construction du CSSOM. Le navigateur convertit les règles CSS en une carte de styles qu'il peut comprendre et utiliser. Le navigateur passe en revue chaque ensemble de règles de la feuille de style CSS, créant ainsi une arbre de noeuds avec des relations parent, enfant et sœurs basées sur les sélecteurs CSS.
+4. compilation du JS : lors de l'analyse du CSS et de la création du CSSOM, d'autres ressources, notamment des fichiers JavaScript, sont en cours de téléchargement (grâce au scanner de préchargement). JavaScript est interprété, compilé, analysé et exécuté. Les scripts sont analysés dans des arbres à syntaxe abstraite. Certains moteurs de navigateur utilisent le Arbre de syntaxe abstraite et le transmettent à un interpréteur, générant le code binaire exécuté sur le thread principal
+5. Le navigateur crée également une arbre d'accessibilité que les périphériques d'assistance utilisent pour analyser et interpréter le contenu. Le modèle d'objet d'accessibilité (AOM) est comme une version sémantique du DOM.
+6. rendu : style, mise en page, peinture. Les arbres CSSOM et DOM créés à l'étape d'analyse sont combinés en un arbre de rendu qui est ensuite utilisé pour calculer la mise en page de chaque élément visible, qui est ensuite peint à l'écran
+7. interactivite
 
-
-
-
-
-
-chaque node du DOM, on va pouvoir faire des choses dessus, il faut voir le DOM comme une API JS sur lequel on peut communiquer pour modifier des trucs. get element.id, 
-
-
-
-
----------
-
-- Qu'est-ce que le navigateur exécute en badground ?
-
-Les navigateurs tels qu'Internet Explorer et Firefox sont en fait un ensemble de logiciels : le navigateur lui-même, plus des logiciels tiers tels qu'Adobe Acrobat Reader, Adobe Flash, iTunes, QuickTime, RealPlayer, etc. Tous sont potentiellement vulnérables aux attaques côté client. 
-
-[cours sur les session HTTP](https://www.pierre-giraud.com/http-reseau-securite-cours/requete-reponse-session/)
 [cours sur le traitement de la réponse HTTP par le navigateur](https://developer.mozilla.org/fr/docs/Web/Performance/How_browsers_work)
-
+[cours sur les session HTTP](https://www.pierre-giraud.com/http-reseau-securite-cours/requete-reponse-session/)
 
 
 
@@ -207,54 +193,46 @@ Mais attention : Les requêtes HTTP sont formulées par le client (c’est-à-di
 
 
 
-## 3. Configurer un serveur HTTP
-
-Quand on parle de serveur, on parle du hardware. Mais y a un certains nombre de programmes qui tournent sur le serveur qu'on appelle aussi serveurs, car ils répondent à des requetes.
-- serveur HTTP : logiciel qui prend en charge les requettes client/serveur du protocole HTTP, ex : Apache, 2is, Nginx
-- serveur Mysql : s'adresse au système de fichier pour récupérer des données
-- serveur FTP : quand le dev a fini sa page web, il l'envoie sur le serveur hardware par l'intermédiaire du serveur ftp
-
-|Type de serveur|Def|
-|----|-----|
-|serveur statique|un OS, et un serveur HTTP|
-|serveur dynamique|en + inclue une BDD et un langage de script comme PHP (= dont le rôle est d'interpréter les demandes du client et de les traduire en HTML)|
-
-![Capture d’écran 2023-08-03 à 18 30 54](https://github.com/iciamyplant/client_side_attack/assets/57531966/351c38cc-3bf5-4f8c-ab66-d700fbe08e6e)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## 3. Sites vulnérables
+
+
+Essayons de créer des failles xss simples, en codant nous même des mini sites non protégés
+
 
 [OWASP Top 10 most critical security risks to web applications](https://owasp.org/www-project-top-ten/)
 
-De manière générale, tout ce qui vient de l’extérieur − saisi par un être humain dans un formulaire, ou bien reçu lors d’un appel à un webservice externe − doit être traité de manière particulière. [14 règles à suivre selon OWASP pour la prévention des failles XSS](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md). [Résumé des préventions] (https://www.geek-directeur-technique.com/2020/04/04/les-failles-de-securite-de-base-dans-le-web-2-le-cross-site-scripting-xss)
-
 - du code en quels langages peut-on injecter ? php, JS, ...
-- comment le développeur est-il censé protéger ? cas le plus courant de ces vulnérabilités se produit lorsque des variables GET sont imprimées ou renvoyées en écho sans filtrage ni vérification de leur contenu
 - exemples de sites et de non-protection. [démo video](https://www.youtube.com/watch?v=E47rY21gXSY) Exemples : https://www.0x0ff.info/2021/attaque-cote-client-xss-et-phishing/
 
 
 
-## 4. Malicious code
+
+
+# II - Contre-mesures 
+
+- comment le développeur est-il censé protéger ? cas le plus courant de ces vulnérabilités se produit lorsque des variables GET sont imprimées ou renvoyées en écho sans filtrage ni vérification de leur contenu
+
+De manière générale, tout ce qui vient de l’extérieur − saisi par un être humain dans un formulaire, ou bien reçu lors d’un appel à un webservice externe − doit être traité de manière particulière. [14 règles à suivre selon OWASP pour la prévention des failles XSS](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md). [Résumé des préventions] (https://www.geek-directeur-technique.com/2020/04/04/les-failles-de-securite-de-base-dans-le-web-2-le-cross-site-scripting-xss)
+
+
+
+
+
+
+
+
+
+## Malicious code : que peut-on faire
 
 Que fait le code malicieux que j'injecte ? 
 - steal cookies
 - read sensitive info
 - inject malware
 - install a keylogger
+- reverse shell ? Jsshell
 - ....
 
+Les navigateurs sont en fait un ensemble de logiciels : le navigateur lui-même, plus des logiciels tiers tels qu'Adobe Acrobat Reader, Adobe Flash, iTunes, QuickTime, RealPlayer, etc. Tous sont potentiellement vulnérables aux attaques côté client. 
 
 [vidéo explication](https://www.youtube.com/watch?v=TVBMqQGLCYM)
 
@@ -264,6 +242,11 @@ Que fait le code malicieux que j'injecte ?
 
 How 22 Lines of Code Claimed 380,000 Victims. How We Used Machine Learning to to Pinpoint the Magecart Crime Syndicate.
 [whole explanation of british airways xss exploitation](https://schoenbaum.medium.com/inside-the-breach-of-british-airways-how-22-lines-of-code-claimed-380-000-victims-8ce1582801a0)
+
+
+
+
+
 
 
 
@@ -283,6 +266,23 @@ BeEF-xss est un framework d'exploitation Web codé en PHP & JavaScript, se conce
 - persistence : faire que ça fonctionne même quand l'onglet est fermé
 
 # III - En pratique
+
+
+
+## 3. Configurer un serveur HTTP
+
+Quand on parle de serveur, on parle du hardware. Mais y a un certains nombre de programmes qui tournent sur le serveur qu'on appelle aussi serveurs, car ils répondent à des requetes.
+- serveur HTTP : logiciel qui prend en charge les requettes client/serveur du protocole HTTP, ex : Apache, 2is, Nginx
+- serveur Mysql : s'adresse au système de fichier pour récupérer des données
+- serveur FTP : quand le dev a fini sa page web, il l'envoie sur le serveur hardware par l'intermédiaire du serveur ftp
+
+|Type de serveur|Def|
+|----|-----|
+|serveur statique|un OS, et un serveur HTTP|
+|serveur dynamique|en + inclue une BDD et un langage de script comme PHP (= dont le rôle est d'interpréter les demandes du client et de les traduire en HTML)|
+
+![Capture d’écran 2023-08-03 à 18 30 54](https://github.com/iciamyplant/client_side_attack/assets/57531966/351c38cc-3bf5-4f8c-ab66-d700fbe08e6e)
+
 
 ### Lancer un serveur de communication (local, port forwarding, ngrok)
 

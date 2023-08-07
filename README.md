@@ -51,6 +51,8 @@ Créer le premier site :
 index.hmtl = page principale de notre site web, première page sur laquelle les utilisateurs arrivent
 ```
 
+### a. Page HTML
+
 structure de base d'une page HMTL : 
 ```
 <!doctype html> <!--declaration du document, doc HTML-->
@@ -76,6 +78,26 @@ structure de base d'une page HMTL :
     <img src="img/TheEnd.jpeg">
     <img src="img/allolaterre.png" width="200">
 </body>
+</html>
+```
+
+### b. Contient du PHP
+
+Schéma du cas où la page à renvoyer par le serveur contient du code PHP
+![Capture d’écran 2023-08-07 à 12 21 02](https://github.com/iciamyplant/client_side_attack/assets/57531966/8d995a00-79db-4bac-8aa7-3b21cab03939)
+
+```
+// php -S localhost:8080 // Pour executer du php, on doit lancer un serveur php
+// index.php :
+<html>
+    <head>
+        <title>Exemple</title>
+    </head>
+    <body>
+        <?php 
+          echo "C'est un script PHP!\n";
+        ?>
+    </body>
 </html>
 ```
 
@@ -192,8 +214,35 @@ Mais attention : Les requêtes HTTP sont formulées par le client (c’est-à-di
 
 ## 3. Sites vulnérables
 
-
 Essayons de créer des failles xss simples, en codant nous même des mini sites non protégés
+### 3.1 failles XSS réfléchies ou non permanentes
+
+```
+/xss_tests/index.php //exemple faille xss non permante
+
+<?php
+    if(!empty($_GET['keyword']))
+    {
+        echo "Résultat(s) pour le mot-clé : ".$_GET['keyword']; //execute le code qu'on entre dans keyword
+    }
+?>
+```
+```
+<script>alert('Ton site est vulnérable aux failles XSS');</script>    //JS
+<h1 style="color:blue;"><u>Un titre personnalisé avec du CSS !</u></h1> //HTML CSS
+```
+
+### 3.2 failles XSS stockées
+
+Stockée car le script est stocké dans la base de données par exemple, et sera aussi affiché à chaque démarrage de l’application. 
+Exemple : blog où on peut écrire des commentaires, ces coms seront stockés dans une base de données. Si mal protégé, un attaquant peut injecter dans un commentaire un morceau de script JS, qui sera stocké dans la BDD, et script executé par chaque utilisateur qui charge la page ensuite.
+
+
+
+
+
+
+
 
 
 [OWASP Top 10 most critical security risks to web applications](https://owasp.org/www-project-top-ten/)

@@ -269,7 +269,7 @@ Se produit lorsqu'une application contient du JS côté client, qui traite des d
 
 
 - du code en quels langages peut-on injecter ? php, JS, ...
-- recherches sur l'URL 
+
 
 
 
@@ -281,6 +281,10 @@ Se produit lorsqu'une application contient du JS côté client, qui traite des d
 - Quels sont les contre-mesures mises en place par les dev web ? ces mesures de protection = sanitization
 
 De manière générale, tout ce qui vient de l’extérieur − saisi par un être humain dans un formulaire, ou bien reçu lors d’un appel à un webservice externe − doit être traité de manière particulière. [14 règles à suivre selon OWASP pour la prévention des failles XSS](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md). [Résumé des préventions] (https://www.geek-directeur-technique.com/2020/04/04/les-failles-de-securite-de-base-dans-le-web-2-le-cross-site-scripting-xss)
+
+[Manipulez les données non fiables avec prudence](https://openclassrooms.com/fr/courses/1761931-securisez-vos-applications/5702792-manipulez-les-donnees-non-fiables-avec-prudence)
+[Protégez votre code de l'injection](https://openclassrooms.com/fr/courses/6179306-securisez-vos-applications-web-avec-lowasp/8169286-protegez-votre-code-contre-l-injection)
+[Comment se prémunir injection attack](https://owasp.org/Top10/fr/A03_2021-Injection/)
 
 ## 2. Bypass les mesures
 

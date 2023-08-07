@@ -10,6 +10,8 @@ L'objectif étant de cibler les vulnérabilités de l'appareil client ou d'un ou
 Types de client-side attacks : cross-site scripting (xss), cross-site request forgery (csrf), content spoofing, session fixation, clickjacking
 
 
+
+
 ## plan
 ### I - Failles XSS
 ### II - Protection
@@ -205,17 +207,17 @@ cinq étapes dans le chemin de rendu en 3 étapes : PARSING, RENDU, INTERACTIVIT
 [cours sur les session HTTP](https://www.pierre-giraud.com/http-reseau-securite-cours/requete-reponse-session/)
 
 
-
----------
-
-Mais attention : Les requêtes HTTP sont formulées par le client (c’est-à-dire dans la majorité des cas le navigateur de vos visiteurs) et vous n’avez donc quasiment aucun contrôle dessus. Idem, les réponses HTTP sont créées par le serveur et vont en grande partie dépendre de la configuration de celui-ci. En fonction de votre hébergeur et de votre formule d’hébergement, vous allez avoir plus ou moins de contrôle sur la configuration de votre espace serveur.
+Mais attention : Les requêtes HTTP sont formulées par le client (navigateurs de vos visiteurs) et vous n’avez donc quasiment aucun contrôle dessus. Idem, les réponses HTTP sont créées par le serveur et vont en grande partie dépendre de la configuration de celui-ci et on a plus ou moins de controle sur la config selon l'hbergeur etc. 
 
 
 
 ## 3. Sites vulnérables
 
 Essayons de créer des failles xss simples, en codant nous même des mini sites non protégés
-### 3.1 failles XSS réfléchies ou non permanentes
+
+### a. failles XSS refletées ou non permanentes
+
+= le code malicieux n'est pas stocké sur le serveur, peut être inclu dans une URL
 
 ```
 /xss_tests/index.php //exemple faille xss non permante
@@ -223,34 +225,41 @@ Essayons de créer des failles xss simples, en codant nous même des mini sites 
 <?php
     if(!empty($_GET['keyword']))
     {
-        echo "Résultat(s) pour le mot-clé : ".$_GET['keyword']; //execute le code qu'on entre dans keyword
+        echo "Résultat(s) pour le mot-clé : ".$_GET['keyword']; //execute le code qu'on entre dans keyword, rien n'est vérifié
     }
 ?>
 ```
 ```
 <script>alert('Ton site est vulnérable aux failles XSS');</script>    //JS
 <h1 style="color:blue;"><u>Un titre personnalisé avec du CSS !</u></h1> //HTML CSS
+<button onlick="alert('Exemple XSS');">bouton test</button> 
 ```
 
-### 3.2 failles XSS stockées
+
+
+
+
+### b. failles XSS stockées
 
 Stockée car le script est stocké dans la base de données par exemple, et sera aussi affiché à chaque démarrage de l’application. 
 Exemple : blog où on peut écrire des commentaires, ces coms seront stockés dans une base de données. Si mal protégé, un attaquant peut injecter dans un commentaire un morceau de script JS, qui sera stocké dans la BDD, et script executé par chaque utilisateur qui charge la page ensuite.
 
+[démo video](https://www.youtube.com/watch?v=E47rY21gXSY) 
+
+
+### c. DOM-based XSS
+
+Se produit lorsqu'une application contient du JS côté client, qui traite des données provenant d'une source non fiable, les données traitées permettent de modifier le DOM, cette attaque se produit généralement sur le navigateur web de la victime
+
+[menu déroulant d'une langue par exemple, ou la variable langue est pas protégée, on peut injecter dans l'URL à la place de langue](https://www.youtube.com/watch?v=E47rY21gXSY)
 
 
 
 
-
-
-
-
-[OWASP Top 10 most critical security risks to web applications](https://owasp.org/www-project-top-ten/)
 
 - du code en quels langages peut-on injecter ? php, JS, ...
-- exemples de sites et de non-protection. [démo video](https://www.youtube.com/watch?v=E47rY21gXSY) Exemples : https://www.0x0ff.info/2021/attaque-cote-client-xss-et-phishing/
+- recherches sur l'URL 
 
-cas le plus courant de ces vulnérabilités se produit lorsque des variables GET sont imprimées ou renvoyées en écho sans filtrage ni vérification de leur contenu
 
 
 
@@ -263,6 +272,11 @@ cas le plus courant de ces vulnérabilités se produit lorsque des variables GET
 De manière générale, tout ce qui vient de l’extérieur − saisi par un être humain dans un formulaire, ou bien reçu lors d’un appel à un webservice externe − doit être traité de manière particulière. [14 règles à suivre selon OWASP pour la prévention des failles XSS](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md). [Résumé des préventions] (https://www.geek-directeur-technique.com/2020/04/04/les-failles-de-securite-de-base-dans-le-web-2-le-cross-site-scripting-xss)
 
 ## 2. Bypass les mesures
+
+
+str_replace
+
+si le nombre de caractères est limité ==> Burp suite permet d'intercepter la requete et avec le repeteur on peut modifier la requete avant de l'envoyer au serveur web 
 
 - Quelles sont les techniques pour by-pass ces protections ?
 - quels sont les payloads JS qui permettent de bypasser la plupart des contournements
@@ -318,6 +332,34 @@ BeEF-xss est un framework d'exploitation Web codé en PHP & JavaScript, se conce
 - persistence : faire que ça fonctionne même quand l'onglet est fermé
 
 # III - En pratique
+
+identifier la victime:
+- Centres d’intérêts : identifier le portrait sociologique de la cible
+- Moyens de communications : quels sont les sites habituellement consultés, quels sont les réseaux-sociaux utilisés, est-ce que l’email est un vecteur pertinent, etc. Autant de questions qui permettent de cibler un peu mieux la population visée.
+- identifier les applications et OS utilisés par la population ciblée alors il n’aura pas besoin de s’éparpiller dans le développement de plusieurs attaques techniques ciblant plusieurs applications dans plusieurs versions
+
+créer la page piégée :
+- soit ma propre page avec un nom de domaine crédible
+- page avec une faille de type XSS hébergée sur un site légitime que j'aurais détourné
+
+  ==> que fait le code dans la page piégée ?
+- récupérer certaines informations ? (cookies, mots de passes, numéro de CB, etc.)
+- Charger un malware sur le poste client ?  si la vulnérabilité exploitée donnait matière à réaliser un RCE
+- modifier le contenu et le fonctionnement du site web
+
+- proposer une page crédible qui n’éveillera pas les soupçons. Le mieux étant de générer une réaction positive mais non marquante afin que l’utilisateur oublie au plus vite avoir accédé à la page
+
+envoyer la page piégée :
+- emails
+- fausses bannières de pub
+- lien sur un forum
+- poste sur un réseau social
+
+[Infos intéressantes](https://www.0x0ff.info/2021/attaque-cote-client-xss-et-phishing/)
+
+
+
+
 
 ## 1. Installer Kali Linux
 
@@ -400,3 +442,6 @@ sudo beef-xss-stop
 ````
 Ok, on a accès à notre page web hébergée sur notre serveur Apache sur la VM à partir de mon téléphone + du MAC sur le reseau local. On a réussi sur l'index.html de Apache de mettre le hook.js, et on arrive à envoyer des commandes sur mon tel et mac. Mais là on peut accéder à index.hmtl à partir des machines de mon réseau, mais il sera pas accessible à partir de l'internet. Maintenant on va essayer de hook un navigateur d'une machine qui n'est pas sur mon réseau local. Une solution est de prendre un hébergement et j'y envoyoie mes fichiers : sauf qui si on taff sur wordpress va falloir synchroniser la bdd etc. 2 autres solutions : port forwarding et ngrok
 
+
+
+[OWASP Top 10 most critical security risks to web applications](https://owasp.org/www-project-top-ten/)

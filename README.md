@@ -19,7 +19,9 @@ Types de client-side attacks : cross-site scripting (xss), cross-site request fo
 
 # I. Failles XSS
 
-Faille XSS (=cross-site scripting) : vulnérabilité de sécurité des pages Web dynamiques, où il y a possibilité pour un attaquant d'injecter du code javascript, ou html, dans une page web qu'on va en tant que victime, exécuter à notre ainsu.
+Faille XSS (=cross-site scripting) : vulnérabilité de sécurité des pages Web, où l'attaquant arrive à injecter du code directement interprétable par un navigateur web, comme, par exemple, du JavaScript ou de l’HTML. Le navigateur ne fera aucune différence entre le code du site et celui injecté par l'attaquant, et exécutera le code.
+
+Les possibilités sont nombreuses : redirection vers un autre site, vol de cookies, modification du code HTML de la page ; en bref, tout ce que ces langages de script vous permettent de faire.
 
 3 catégories de XSS : 
 - stored (persistent) = injects scripts that remain on the server
@@ -27,11 +29,6 @@ Faille XSS (=cross-site scripting) : vulnérabilité de sécurité des pages Web
 - DOM-based = executed completly on the client side nothing to do with the server
 
 Exemple : l'attaquant peut écrire un commentaire sur un blog, où il va mettre du JS qui fait une XSS. Et la prochaine fois qu'un mec va venir sur le blog, il va charger la page, qui contient le commentaire en JS (c'est une stored XSS) et le code malveillant va s'executer. Ce XSS va se déclencher pour chacun des utilisteurs légitimes qui vont charger la page après l'injection du JS. [Exemple d'exploitation faille XSS](https://www.youtube.com/watch?v=iHcXH8eByDA)
-
-`````
-// dans index.php 'Name' n'est pas protégé
-// possibilité d'injecter du code
-`````
 
 
 ## 1. Bases du développement web
@@ -273,7 +270,14 @@ BeEF-xss est un framework d'exploitation Web codé en PHP & JavaScript, se conce
 
 # III - En pratique
 
+## 1. Installer Kali Linux
 
+[dwld images Kali Linux](https://www.kali.org/get-kali/#kali-platforms)
+[tuto](https://www.youtube.com/watch?v=AeX5BUy91SM)
+```
+left+cmd pour uncapture souris
+ctrl+alt
+```
 
 ## 3. Configurer un serveur HTTP
 

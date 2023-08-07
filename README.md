@@ -14,7 +14,7 @@ Types de client-side attacks : cross-site scripting (xss), cross-site request fo
 
 ## plan
 ### I - Failles XSS
-### II - Protection
+### II - Contre-mesures & Bypass
 ### III - BeEF-xss
 ### III - En pratique
 
@@ -274,7 +274,7 @@ Se produit lorsqu'une application contient du JS côté client, qui traite des d
 
 
 
-# II - Contre-mesures
+# II - Contre-mesures & Bypass
 
 ## 1. Sanitization
 
@@ -303,26 +303,6 @@ si le nombre de caractères est limité ==> Burp suite permet d'intercepter la r
 
 
 
-## Malicious code : que peut-on faire
-
-Que fait le code malicieux que j'injecte ? 
-- steal cookies
-- read sensitive info
-- inject malware
-- install a keylogger
-- reverse shell ? Jsshell
-- ....
-
-Les navigateurs sont en fait un ensemble de logiciels : le navigateur lui-même, plus des logiciels tiers tels qu'Adobe Acrobat Reader, Adobe Flash, iTunes, QuickTime, RealPlayer, etc. Tous sont potentiellement vulnérables aux attaques côté client. 
-
-[vidéo explication](https://www.youtube.com/watch?v=TVBMqQGLCYM)
-
-
-
-----------------
-
-How 22 Lines of Code Claimed 380,000 Victims. How We Used Machine Learning to to Pinpoint the Magecart Crime Syndicate.
-[whole explanation of british airways xss exploitation](https://schoenbaum.medium.com/inside-the-breach-of-british-airways-how-22-lines-of-code-claimed-380-000-victims-8ce1582801a0)
 
 
 
@@ -331,13 +311,16 @@ How 22 Lines of Code Claimed 380,000 Victims. How We Used Machine Learning to to
 
 
 
-## II - Etapes avec BeEF-xss
+
+
+
+# III - Etapes avec BeEF-xss
 
 Il existe plusieurs frameworks d'exploitation des failles XSS : BeEF-xss, The Cross-Site Scripting Framework (XSSF), OWASP Xenotix XSS Exploit Framework, Autopwn.
 
 BeEF-xss est un framework d'exploitation Web codé en PHP & JavaScript, se concentre sur l'exploitation de vulnérabilités du coté navigateur (client). Consiste à exploiter un vecteur d’attaque sur une machine cliente (vecteur XSS, CSRF, etc) pour ouvrir une porte d’accès au système, et d’examiner les exploitations potentielles dans le contexte courant du navigateur. Une fois une cible rattachée à BeEF, le framework exploite un tunnel asynchrone (principalement généré par Javascript/Ajax) afin de lancer l’exécution de modules dans le navigateur de la cible, et ainsi perpétuer des attaques à l’encontre du système. 
 
-- lancer un serveur Linux avec beef installé dessus (voir Ngrok, faut ajouter des informations dans le fichier de config) // port forwarding. Serveur de communication = composant qui communique via HTTP avec les navigateurs infectés
+- lancer un serveur Linux avec beef installé dessus (voir Ngrok, faut ajouter des informations dans le fichier de config) // port forwarding. 
 - on lance beef, et on obtient : l'url de l'interface administration + le hook.js à injecter
 - injecter le hook.js dans une page web, site XSSed recense une grande partie de l’actualité liée à cette famille de vulnérabilités
 - envoyer à la victime le lien (email, sms?) et donner une bonne raison de cliquer sur le lien
@@ -346,46 +329,9 @@ BeEF-xss est un framework d'exploitation Web codé en PHP & JavaScript, se conce
 - possibilité de faire ses propres modules, regarder ce qui a été fait comme c'est de l'open source
 - persistence : faire que ça fonctionne même quand l'onglet est fermé
 
-# III - En pratique
-
-identifier la victime:
-- Centres d’intérêts : identifier le portrait sociologique de la cible
-- Moyens de communications : quels sont les sites habituellement consultés, quels sont les réseaux-sociaux utilisés, est-ce que l’email est un vecteur pertinent, etc. Autant de questions qui permettent de cibler un peu mieux la population visée.
-- identifier les applications et OS utilisés par la population ciblée alors il n’aura pas besoin de s’éparpiller dans le développement de plusieurs attaques techniques ciblant plusieurs applications dans plusieurs versions
-
-créer la page piégée :
-- soit ma propre page avec un nom de domaine crédible
-- page avec une faille de type XSS hébergée sur un site légitime que j'aurais détourné
-
-  ==> que fait le code dans la page piégée ?
-- récupérer certaines informations ? (cookies, mots de passes, numéro de CB, etc.)
-- Charger un malware sur le poste client ?  si la vulnérabilité exploitée donnait matière à réaliser un RCE
-- modifier le contenu et le fonctionnement du site web
-
-- proposer une page crédible qui n’éveillera pas les soupçons. Le mieux étant de générer une réaction positive mais non marquante afin que l’utilisateur oublie au plus vite avoir accédé à la page
-
-envoyer la page piégée :
-- emails
-- fausses bannières de pub
-- lien sur un forum
-- poste sur un réseau social
-
-[Infos intéressantes](https://www.0x0ff.info/2021/attaque-cote-client-xss-et-phishing/)
 
 
-
-
-
-## 1. Installer Kali Linux
-
-[dwld images Kali Linux](https://www.kali.org/get-kali/#kali-platforms)
-[tuto](https://www.youtube.com/watch?v=AeX5BUy91SM)
-```
-left+cmd pour uncapture souris
-ctrl+alt
-```
-
-## 3. Configurer un serveur HTTP
+### Lancer un serveur de communication (local, port forwarding, ngrok)
 
 Quand on parle de serveur, on parle du hardware. Mais y a un certains nombre de programmes qui tournent sur le serveur qu'on appelle aussi serveurs, car ils répondent à des requetes.
 - serveur HTTP : logiciel qui prend en charge les requettes client/serveur du protocole HTTP, ex : Apache, 2is, Nginx
@@ -399,8 +345,6 @@ Quand on parle de serveur, on parle du hardware. Mais y a un certains nombre de 
 
 ![Capture d’écran 2023-08-03 à 18 30 54](https://github.com/iciamyplant/client_side_attack/assets/57531966/351c38cc-3bf5-4f8c-ab66-d700fbe08e6e)
 
-
-### Lancer un serveur de communication (local, port forwarding, ngrok)
 
 #### A. En local pour avoir le server on en local + le hook.js
 
@@ -459,4 +403,83 @@ Ok, on a accès à notre page web hébergée sur notre serveur Apache sur la VM 
 
 
 
+
+
+
+
+
+
+
+
+
+# III - En pratique
+
+### a. identifier la victime
+
+- Centres d’intérêts : identifier le portrait sociologique de la cible
+- Moyens de communications : quels sont les sites habituellement consultés, quels sont les réseaux-sociaux utilisés, est-ce que l’email est un vecteur pertinent, etc. Autant de questions qui permettent de cibler un peu mieux la population visée.
+- identifier les applications et OS utilisés par la population ciblée alors il n’aura pas besoin de s’éparpiller dans le développement de plusieurs attaques techniques ciblant plusieurs applications dans plusieurs versions
+
+
+### b. Créer la page piégée :
+
+- soit ma propre page avec un nom de domaine crédible (proposer une page crédible qui n’éveillera pas les soupçons. Le mieux étant de générer une réaction positive mais non marquante afin que l’utilisateur oublie au plus vite avoir accédé à la page)
+- page avec une faille de type XSS hébergée sur un site légitime que j'aurais détourné
+
+
+  ==> que fait le code dans la page piégée ?
+- récupérer certaines informations ? (cookies, mots de passes, numéro de CB, etc.)
+- Charger un malware sur le poste client ?  si la vulnérabilité exploitée donnait matière à réaliser un RCE
+- modifier le contenu et le fonctionnement du site web
+
+- steal cookies
+- read sensitive info
+- inject malware
+- install a keylogger
+- reverse shell ? Jsshell
+- ....
+
+Les navigateurs sont en fait un ensemble de logiciels : le navigateur lui-même, plus des logiciels tiers tels qu'Adobe Acrobat Reader, Adobe Flash, iTunes, QuickTime, RealPlayer, etc. Tous sont potentiellement vulnérables aux attaques côté client. 
+
+[vidéo explication](https://www.youtube.com/watch?v=TVBMqQGLCYM)
+
+
+### c. Envoyer la page piégée :
+- emails
+- fausses bannières de pub
+- lien sur un forum
+- poste sur un réseau social
+
+[Infos intéressantes](https://www.0x0ff.info/2021/attaque-cote-client-xss-et-phishing/)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------
+
+```
+left+cmd pour uncapture souris
+ctrl+alt
+```
+
+
+
+## Links
+
 [OWASP Top 10 most critical security risks to web applications](https://owasp.org/www-project-top-ten/)
+
+How 22 Lines of Code Claimed 380,000 Victims. How We Used Machine Learning to to Pinpoint the Magecart Crime Syndicate.
+[whole explanation of british airways xss exploitation](https://schoenbaum.medium.com/inside-the-breach-of-british-airways-how-22-lines-of-code-claimed-380-000-victims-8ce1582801a0)

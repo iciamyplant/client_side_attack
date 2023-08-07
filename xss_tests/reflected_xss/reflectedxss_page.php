@@ -14,7 +14,7 @@
     <?php
     if(!empty($_GET['keyword']))
     {
-        echo "Résultat(s) pour le mot-clé : ".$_GET['keyword']; // executer le doc en lancant un serveur php avec php -S localhost:8080
+        echo "Résultat(s) pour le mot-clé : ".$_GET['keyword'];
     }
     ?>
 </body>

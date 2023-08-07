@@ -217,7 +217,7 @@ Essayons de créer des failles xss simples, en codant nous même des mini sites 
 
 ### a. failles XSS refletées ou non permanentes
 
-= le code malicieux n'est pas stocké sur le serveur, peut être inclu dans une URL
+= le code malicieux n'est pas stocké sur le serveur, peut être inclu dans une URL.
 
 ```
 /xss_tests/index.php //exemple faille xss non permante
@@ -235,8 +235,19 @@ Essayons de créer des failles xss simples, en codant nous même des mini sites 
 <button onlick="alert('Exemple XSS');">bouton test</button> 
 ```
 
+L'URL (=Uniform Resource Locator) permet de localiser les fichiers auxquels on veut accéder. 
 
+|fragment de l'URL|explication|
+|---|---|
+|http://|protocole, indique au navigateur le protocole qui doit être utilisé pour récupérer le contenu|
+|www.exemple.com|nom de domaine, indique à quel serveur web s'adresser (correspond à une adresse IP)|
+|:80|port utilisé sur le serveur web. Généralement absent car le navigateur utilise les ports standards associé au protocole (80 pour HTTP, 443 pour HTTPS). Si le port utilisé par le serveur n'est pas celui par défaut, il faudra l'indiquer|
+|/chemin/vers/monfichier.html|chemin, sur le serveur web, vers la ressource (à l'ancienne vrai chemin existant sur le serveur, ajd c'est une abstraction gérée par le serveur|
+|?clé1=valeur1&clé2=valeur2|sont des paramètres supplémentaires fournis au serveur web, construits sous la forme d'une liste de paires de clé/valeur dont chaque élément est séparé par '&'. Le serveur web pourra utiliser ces paramètres pour effectuer des actions supplémentaires avant d'envoyer la ressource. Chaque serveur web possède ses propres règles quant aux paramètres|
 
+````
+<?php echo "Page ".urldecode($_SERVER[REQUEST_URI])."Not Found"; ?>
+````
 
 
 ### b. failles XSS stockées

@@ -426,6 +426,7 @@ Ok, on a accès à notre page web hébergée sur notre serveur Apache sur la VM 
 - soit ma propre page avec un nom de domaine crédible (proposer une page crédible qui n’éveillera pas les soupçons. Le mieux étant de générer une réaction positive mais non marquante afin que l’utilisateur oublie au plus vite avoir accédé à la page)
 - page avec une faille de type XSS hébergée sur un site légitime que j'aurais détourné
 
+==> mettre un certificat ssl dessus ? Pour legitimate encore plus la page
 
   ==> que fait le code dans la page piégée ?
 - récupérer certaines informations ? (cookies, mots de passes, numéro de CB, etc.)

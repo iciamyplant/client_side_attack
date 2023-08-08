@@ -402,7 +402,7 @@ Pour que mon pote puisse voir mon serveur apache, il va falloir que je dise que 
 [Explications](https://github.com/beefproject/beef/wiki/FAQ#how-do-i-configure-beef-on-a-server-behind-nat)
 
 - Demande adresse ipv4 full stack
-- Redirection de port 80 et 443 sur le routeur (attention IP source : toutes)
+- Redirection de port 80 (http) et 443 (https) sur le routeur (attention IP source : toutes)
 - Configurer Apache [configurer serveur apache](https://null-byte.wonderhowto.com/how-to/linux-basics-for-aspiring-hacker-configuring-apache-0164096/)
 - Lancer Apache + Tester sur une machine sur WAN
 

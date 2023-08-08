@@ -331,7 +331,7 @@ BeEF-xss est un framework d'exploitation Web codé en PHP & JavaScript, se conce
 
 
 
-### Lancer un serveur de communication (local, port forwarding, ngrok)
+## Lancer un serveur de communication (local, port forwarding, ngrok)
 
 Quand on parle de serveur, on parle du hardware. Mais y a un certains nombre de programmes qui tournent sur le serveur qu'on appelle aussi serveurs, car ils répondent à des requetes.
 - serveur HTTP : logiciel qui prend en charge les requettes client/serveur du protocole HTTP, ex : Apache, 2is, Nginx
@@ -365,20 +365,7 @@ On va essayer de hook un browser en local sur la meme machine. On a notre pannel
 sudo apt install chromium-driver //on instale chromium driver pour ouvrir le hook.js
 // on lance le 127.0.0.1:3000/demos/basic.html
 // ca fonctionne
-// dans le commandes : rouge ca veut dire que la commande ne va pas fonctionner sur le browser de la victime, vert ca signifie que ca va marcher, et blanc ca veut dire que may work or not
 ````
-|commande|explication|
-|-----|------|
-|alert dialog|pop-up avec un texte où on écrit ce qu'on veut|
-|prompt screen|pop-up mais la cible peut ecrire qqch et on peut recuperer ce quelle ecrit|
-|fake flash update | pop-up en mode il faut faire une update. Si clique sur install ==> dwld le file. Donc si execute le fichier possibilité d'injecter un payload. On peut changer l'image du pop-up qui s'affiche pr que ca soit credible|
-|google phishing| fake google gmail page|
-|pretty theft|ask username and password using a floating div (fausse page on peut choisir facebook, linkedin, youtube etc.) |
-|spyder eye|take a picture of the victime's browser window|
-|get geolocation|retrives the physical location of the hooked browser using third party hosted geolocation APIs |
-|redirect browser|redirect the selected hooked browser to the adress specified in the 'redirected URL' input|
-|...||
-
 Maintenant on va hook le browser d'une autre machine sur notre LAN. Apache est pré-installé sur Kali Linux. VM sur Virtual Box automatiquement en NAT, mettre en pont si jveux quelle ai son adress ip comme toutes les autres machines du reseau. 
 ````
 ifconfig //doit etre en format 192.168. et pas en 10.
@@ -401,12 +388,71 @@ sudo beef-xss-stop
 ````
 Ok, on a accès à notre page web hébergée sur notre serveur Apache sur la VM à partir de mon téléphone + du MAC sur le reseau local. On a réussi sur l'index.html de Apache de mettre le hook.js, et on arrive à envoyer des commandes sur mon tel et mac. Mais là on peut accéder à index.hmtl à partir des machines de mon réseau, mais il sera pas accessible à partir de l'internet. Maintenant on va essayer de hook un navigateur d'une machine qui n'est pas sur mon réseau local. Une solution est de prendre un hébergement et j'y envoyoie mes fichiers : sauf qui si on taff sur wordpress va falloir synchroniser la bdd etc. 2 autres solutions : port forwarding et ngrok
 
+#### B. Port forwarding ou Ngrok
+
+Port = chiffre ajouté en suffixe d'une adresse ip qui permet de savoir quelle application on veut contacter sur la machine. [Cours](https://www.youtube.com/watch?v=UyIcIl3B9ZU)
+
+L'adresse IP publique de mon LAN chez moi = adresse de ma boxe internet. C'est elle qui me permet d'être sur internet, qui me relie à d'autres réseaux, personne d'autre sur internet n'a la meme adresse ip publique. Du point de vue de internet et de tous les autres sous-réseaux privés, je ne suis visible que par cette adresse. La boxe diffuse le réseau par la wifi, ou via ses ports ethernet.
+
+Mon adresse IP publique elle dépend de mon FAI. Si je suis chez SFR, c'est SFR qui me la fournit. L'adresse réseau de SFR c'est 72.172.0.0. Tous les gens qui seront chez SFR auront une adresse ip qui commence par 72.172. Mais si je fais un ifconfig sur ma machine, par ex imaginons que je suis en 192.168.0.0. Mais alors comment on peut recevoir des notifications par exemple de YouTube sur une machine en particulier alors que YouTube ils peuvent voir que ma boxe internet ? Ca c'est le NAT. Donc dans des communications entre un serveur google et ma machine, c'est ma boxe qui demande au serveur, et le serveur repond à ma boxe. Et c'est la boxe qui va faire une translation entre mon adresse de ma machine sur mon reseau local et l'adresse de la boxe. 
+
+Je peux, dans mon reseau privé, mettre des serveurs. Je peux installer un serveur apache, un serveur BDD, des serveurs TCP... Sauf que si j'installe un serveur apache sur le port 80, seules les ip qui sont sur le même reseau que moi pourront communiquer avec mon serveur Apache. Genre si j'ai un serveur apache imaginons sur le 192.168.0.26 et que mon pote de chez lui il ping mon serveur 192.168.0.26 il verra rien parce qu'en fait il ping sur son propre reseau. 
+
+Pour que mon pote puisse voir mon serveur apache, il va falloir que je dise que je ne suis pas sur la 192.168.0.26 mais sur mon adresse ip publique de ma boxe. Mon pote fait un requette HTTP sur le port 80 à l'adresse publique. Mais la boxe ne va rien répondre parce qu'elle n'est pas un serveur web. La solution c'est une interface de gestion sur la boxe, et de dire que si y a une requete HTTP sur le port 80 qui arrive sur ma boxe, c'est pas la boxe qui doit répondre mais ma machine qui est apache sur mon reseau. Le port va automatiquement être redirigé vers l'adresse ip de ma machine qui est sur mon reseau local. C'est de la redirection de port. Port forwarding (=redirection de port) =  rediriger des paquets réseaux reçus sur un port donné d'un ordinateur ou un équipement réseau vers un autre ordinateur ou équipement réseau sur un port donné
+[Explications](https://github.com/beefproject/beef/wiki/FAQ#how-do-i-configure-beef-on-a-server-behind-nat)
+
+- Demande adresse ipv4 full stack
+- Redirection de port 80 et 443 sur le routeur (attention IP source : toutes)
+- Configurer Apache [configurer serveur apache](https://null-byte.wonderhowto.com/how-to/linux-basics-for-aspiring-hacker-configuring-apache-0164096/)
+- Lancer Apache + Tester sur une machine sur WAN
+
+`````
+/// fichiers configs de Apache :
+cd /etc/apache2
+find répertoire -name nom-du-fichier //chercher fichier quand jsp ds quel repertoire
+service apache2 restart
+// entrer mon adresse ip publique avec une autre machine sur WAN, page d'accueil Apache OK
+netstat -a // pour verifier si le port est bien libre
+`````
+
+- forward the public port (default 3000/tcp) from your border router to the BeEF server (<LAN IP>:3000) [doc](https://github.com/beefproject/beef/wiki/FAQ#how-do-i-configure-beef-on-a-server-behind-nat)
+- hook navigateur de francois sur le WAN OK
+
+`````
+/home/kali/beef/config.yaml //fichier pour changer mdp beef
+sudo beef-xss-stop
+sudo beef-xss
+cd /var/www/html
+sudo vim index.html
+//je remplace dans la hook url par mon adresse ip publique dans mon index.html http://<your WAN IP address>:3000/hook.js
+service apache2 restart
+ //hook navigateur de francois
+`````
+
+[installer un serveur web à la maison](https://www.magentix.fr/blog/un-serveur-web-a-la-maison.html)
+J'ai fait avec le port forwarding, mais possibilité de faire avec Ngrok : [Tuto Ngrok de Grafikart](https://www.youtube.com/watch?v=PylWF44i2pY) Ngrok = outil qui permet de créer un tunnel vers votre environnement de développement en local. Ngrok va venir créer un tunnel. On ouvre ngrok, on dit ok je veux me connecter à toi. Là on ouvre un tunnel, comme un vpn, entre notre ordinateur et le serveur de ngrok, qui lui va nous créer un url sur le serveur de ngrok, que les utilisateurs vont pouvoir, eux, accéder directement au serveur qui est sur notre ordinateur. 
 
 
 
+## Commandes & Malicious code
 
+Y a quoi dans le hook.js ?
 
+// dans le commandes : rouge ca veut dire que la commande ne va pas fonctionner sur le browser de la victime, vert ca signifie que ca va marcher, et blanc ca veut dire que may work or not
 
+|commande|explication|
+|-----|------|
+|alert dialog|pop-up avec un texte où on écrit ce qu'on veut|
+|prompt screen|pop-up mais la cible peut ecrire qqch et on peut recuperer ce quelle ecrit|
+|fake flash update | pop-up en mode il faut faire une update. Si clique sur install ==> dwld le file. Donc si execute le fichier possibilité d'injecter un payload. On peut changer l'image du pop-up qui s'affiche pr que ca soit credible|
+|google phishing| fake google gmail page|
+|pretty theft|ask username and password using a floating div (fausse page on peut choisir facebook, linkedin, youtube etc.) |
+|spyder eye|take a picture of the victime's browser window|
+|get geolocation|retrives the physical location of the hooked browser using third party hosted geolocation APIs |
+|redirect browser|redirect the selected hooked browser to the adress specified in the 'redirected URL' input|
+|...||
+
+## Persistance
 
 
 

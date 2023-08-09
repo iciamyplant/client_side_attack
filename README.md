@@ -472,6 +472,11 @@ Informations qu'on a :
 
 --> historique du navigateur ?
 
+get geolocation (third-party) : 
+- j'arrive à avoir le FAI
+- j'arrive à avoir l'adresse ip
+- j'arrive à avoir la ville, country code, region
+
 |commande|explication|
 |-----|------|
 |alert dialog|pop-up avec un texte où on écrit ce qu'on veut|
@@ -484,7 +489,6 @@ Informations qu'on a :
 |redirect browser|redirect the selected hooked browser to the adress specified in the 'redirected URL' input|
 |...||
 
-
 // dans le commandes : rouge ca veut dire que la commande ne va pas fonctionner sur le browser de la victime, vert ca signifie que ca va marcher, et blanc ca veut dire que may work or not
 
 - tester les commandes qu'il test ici : https://www.youtube.com/watch?v=ZYB4B89vAyw
@@ -492,8 +496,16 @@ Informations qu'on a :
 
 #### B. Malicious code
 
+beef = open source project, started in 2006, last push 5 days ago on github
+
+
 - Y a quoi dans le hook.js ?
 hook.js, fichier qui, quand il est exécuté donne le hook à beef.
+
+<script></script> in JS
+
+The BeEF launches a BeEF instance which is a combination of the UI server(the UI which is used to launch attacks and shows the various exploits) and the communications server which coordinates and communicates with the hooked browsers. These 2 servers in collaboration makes BeEF work.
+
 
 
 
@@ -501,7 +513,7 @@ hook.js, fichier qui, quand il est exécuté donne le hook à beef.
 
 Vous pouvez configurer BeEF pour créer des cookies persistants sur la machine victime qui survivront à une simple suppression du cache des cookies. Tant que la machine cible a une fenêtre de navigateur ouverte exécutant le code de crochet BeEF, l'attaquant aura accès au navigateur des victimes. C'est pendant cette fenêtre qu'un attaquant devrait lancer des exploits supplémentaires à partir du cadre BeEF pour maintenir une connexion persistante après la fermeture de la fenêtre du navigateur.
 
-
+You can configure BeEF to create persistent cookies on the victim machine that will survive a simple cookie-cache clearing. So long as the target machine has a browser window open running the BeEF hook code, the attacker will have access to the victims browser. It is during this window an attacker would have to initiate additional exploits from within the BeEF framework to maintain a persistent connection after the browser window is closed.
 
 
 # III - En pratique

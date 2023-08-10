@@ -449,11 +449,6 @@ J'ai fait avec le port forwarding, mais possibilité de faire avec Ngrok : [Tuto
 // core/main/handlers/modules/beefjs.rb - Line 16 - definition of build_beefjs!()
 ````
 
---> Quel est l'objectif ? Que veut-on faire sur l'ordinateur de la victime ?
-- historique du navigateur
-- afficher "arrêtes de jouer à lol" dès qu'il y joue
-- persistant, avoir toujours accès même après qu'il ferme l'onglet
-
 
 #### B. UI Panel : Details & Commands
 
@@ -491,42 +486,66 @@ J'ai fait avec le port forwarding, mais possibilité de faire avec Ngrok : [Tuto
 |redirect browser|redirect the selected hooked browser to the adress specified in the 'redirected URL' input|
 |...||
 
-get geolocation (third-party) : 
-- j'arrive à avoir le FAI
-- j'arrive à avoir l'adresse ip
-- j'arrive à avoir la ville, country code, region
 
-detect social networks : ca marche pour facebook, détecte si facebook est authentifié
+|Commandes préférées| ce qu'elle font|
+|----|----|
+|get geolocation (third-party)|j'arrive à avoir le FAI, l'adresse ip, la ville, country code, region|
+|detect social networks | ca marche pour facebook, détecte si facebook est authentifié|
+|blockui modal dialog |bloquer la fenetre avec un message|
+|redirect browser|le rediriger sur une nouvelle page|
 
-blockui modal dialog ==> bloquer la fenetre avec un message
 
-redirect browser
 
-#### C. 
+#### C. Persistance 
 
-- être notifiée à chaque fois qu'il va ouvrir discord et aller jouer à lol ==> ca demande de savoir ce qu'il fait sur son navigateur
-- mettre un pop-up sur son navigateur "arrêtes de jouer à lol"
+
+--> Quel est l'objectif ? Que veut-on faire sur l'ordinateur de la victime ?
+- historique du navigateur
+- afficher "arrêtes de jouer à lol" dès qu'il y joue
+- persistant, avoir toujours accès même après qu'il ferme l'onglet
 
 
 [User Guide](https://github.com/beefproject/beef/wiki/Introducing-BeEF)
 
 
+#### Beef-xss + ARP poisoning sur son réseau local ==> ca fait que hook.js est injecté dans toutes les pages http
+
+Faille dans le protocole ARP
+protocole ARP ==> a pour but de traduire une adresse IP en une adresse MAC, 
+
+1 terminal demande l'adresse MAC d'une adresse IP, tout le monde dans le réseau recoit la demande car on est en broadcast. Normalement sur l'ordinateur concerné est censé repondre son adresse MAC. Mon Ip est ... voici ma mac : ....
+
+Pour répondre au bon ordinateur, il crée un cache ARP (à partir des données qu'il vient de recevoir)
+
+quand l'ordi 1 recoit la reponse, il peut mettre a jour son cache ARP aussi
+
+[Arp poisoning avec ettercap](https://github.com/iciamyplant/camera_hack)
+
+
+#### Autres techniques persistance
+
+==> faire installer une extension de navigateur malveillante
+
+confirm_close_tab - still worked last i checked; but not as effective as it used to be.
+hijack_opener - works, but requires specific conditions.
+iframe_above - not sure; and requires user interaction.
+invisible_htmlfile_activex - nice bug, but only ever worked in IE11. now patched.
+jsonp_service_worker - not sure; and dependent on the web site exposing JSONP.
+man_in_the_browser - patched many years ago. never worked in IE.
+popunder_window - browsers now block popups by default; however, this module still works if the users clicks somewhere on the page.
+popunder_window_ie - nice bug, but only ever worked in IE11. now patched.
 
 
 
-
-
-
-
-## Persistance
-
---> + persistant, que meme quand il ferme l'onglet j'ai tjr des acces
 
 https://github.com/beefproject/beef/wiki/Persistence
 
 Vous pouvez configurer BeEF pour créer des cookies persistants sur la machine victime qui survivront à une simple suppression du cache des cookies. Tant que la machine cible a une fenêtre de navigateur ouverte exécutant le code de crochet BeEF, l'attaquant aura accès au navigateur des victimes. C'est pendant cette fenêtre qu'un attaquant devrait lancer des exploits supplémentaires à partir du cadre BeEF pour maintenir une connexion persistante après la fermeture de la fenêtre du navigateur.
 
-You can configure BeEF to create persistent cookies on the victim machine that will survive a simple cookie-cache clearing. So long as the target machine has a browser window open running the BeEF hook code, the attacker will have access to the victims browser. It is during this window an attacker would have to initiate additional exploits from within the BeEF framework to maintain a persistent connection after the browser window is closed.
+
+
+
+
 
 
 # III - En pratique

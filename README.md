@@ -597,6 +597,14 @@ Pour exploiter cette faille différents outils ;
 
 ### a. Réussir à mettre notre adresse MAC à la place de l'adresse MAC du routeur dans la table ARP de la machine cible à la main
 
+````
+// Trouver l'IP + addr MAC de lu périphérique de la cible :
+
+sudo bettercap
+> net.probe on // voir tout le mon de sur le réseau, identifier son addr ip + addr MAC
+> net.show // tous les devices connectés, nous donne la gateway
+````
+
 Trame Ethernet = couche 1 / 2 (LAN) modele OSI ==> protocole Ethernet et adresses MAC. Message envoyé en couche 2 s'appelle une trame. Dans cette trame Ethernet, contient un paquet ARP.
 
 ![paquet ARP](https://github.com/iciamyplant/client_side_attack/assets/57531966/6fe11809-3bff-4326-8d73-23e326b8f09d)
@@ -649,18 +657,23 @@ sudo bash -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'
 ```
 
 
-
-## 2. Bettercap : MiTM + monitoring & modify the traffic
-
-````
-sudo bettercap
-> net.probe on // voir tout le monde sur le réseau, identifier son addr ip + addr MAC
-> net.show // tous les devices connectés, nous donne la gateway
-````
+## 2. Voir le traffic, quels sites HTTP & HTTPS il consulte
 
 
--> ajouter le hook.js dans toutes les pages http
--> on pourrait même rediriger une page demandée vers une autre
+
+
+## 3. Réussir à le rediriger vers le site que je veux
+
+On pourraît ajouter hook.js dans toutes les pages http demandées. Mais ce qui serait encore mieux, serait de réussir à le rediriger vers un autre site que celui demandé. 
+- par exemple il demande instagram.com ==> je le redirige vers une fausse page instagram que je crée, et récupérer ses id/mdp
+- par exemple dès que je remarque qu'il joue à lol ==> je le redirige vers une page que j'ai crée avec beef xss dedans et je bloque la fenetre avec une pop-up avec écrit "Arrête de jouer à LoL"
+
+
+
+
+
+
+
 
 
 -------------

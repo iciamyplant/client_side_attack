@@ -14,8 +14,32 @@ Types de client-side attacks : cross-site scripting (xss), cross-site request fo
 
 ## plan
 ### I - Failles XSS
-### II - Contre-mesures & Bypass
-### III - BeEF-xss
+- **1. Bases du développement web**
+  *  a. Page HTML
+  *  b. Contient du PHP
+- **2. Fonctionnement d'une session HTTP**
+  *  a. Etape 1 : Requête HTTP du navigateur
+  *  b. Etape 2 : Réponse HTTP du serveur
+  *  c. Etape 3 : Traitement de la réponse HTTP par le navigateur
+- **3. Sites vulnérables**
+  *  a. failles XSS refletées ou non permanentes
+  *  b. failles XSS stockées
+  *  c. DOM-based XSS
+- **4. Contre-mesures & Bypass**
+  *  a. Sanitization
+  *  b. Bypass les mesures
+
+### II - BeEF-xss
+- **1. Lancer un serveur de communication (local, port forwarding, ngrok)**
+  *  a. En local pour avoir le server on en local + le hook.js
+  *  b. Port forwarding ou Ngrok
+- **2. Exploitation**
+  *  a. Malicious code
+  *  b. UI Panel : Details & Commands
+  *  c. Persistance
+
+### III - MiTM ARP Poisoning
+
 ### III - En pratique
 
 
@@ -265,18 +289,9 @@ Se produit lorsqu'une application contient du JS côté client, qui traite des d
 [menu déroulant d'une langue par exemple, ou la variable langue est pas protégée, on peut injecter dans l'URL à la place de langue](https://www.youtube.com/watch?v=E47rY21gXSY)
 
 
+## 4. Contre-mesures & Bypass
 
-
-
-- du code en quels langages peut-on injecter ? php, JS, ...
-
-
-
-
-
-# II - Contre-mesures & Bypass
-
-## 1. Sanitization
+### a. Sanitization
 
 - Quels sont les contre-mesures mises en place par les dev web ? ces mesures de protection = sanitization
 
@@ -286,8 +301,7 @@ De manière générale, tout ce qui vient de l’extérieur − saisi par un êt
 [Protégez votre code de l'injection](https://openclassrooms.com/fr/courses/6179306-securisez-vos-applications-web-avec-lowasp/8169286-protegez-votre-code-contre-l-injection)
 [Comment se prémunir injection attack](https://owasp.org/Top10/fr/A03_2021-Injection/)
 
-## 2. Bypass les mesures
-
+### b. Bypass les mesures
 
 str_replace
 
@@ -304,17 +318,7 @@ si le nombre de caractères est limité ==> Burp suite permet d'intercepter la r
 
 
 
-
-
-
-
-
-
-
-
-
-
-# III - Etapes avec BeEF-xss
+# II - BeEF-xss
 
 Il existe plusieurs frameworks d'exploitation des failles XSS : BeEF-xss, The Cross-Site Scripting Framework (XSSF), OWASP Xenotix XSS Exploit Framework, Autopwn. Ainsi que des frameworks pour tester automatiquement s'il semble y avoir des vulnérabilités xss sur une page : Nesus, Nikto, SOAP UI tool...
 

@@ -38,7 +38,8 @@ Types de client-side attacks : cross-site scripting (xss), cross-site request fo
   *  b. UI Panel : Details & Commands
   *  c. Persistance
 
-### III - MiTM ARP Poisoning
+### III - MiTM ARP Poisoning + BeEF-xss
+
 
 ### III - En pratique
 
@@ -454,7 +455,7 @@ J'ai fait avec le port forwarding, mais possibilité de faire avec Ngrok : [Tuto
 ````
 
 
-#### b. UI Panel : Details & Commands
+### b. UI Panel : Details & Commands
 
 |Details|A quoi ca correspond|
 |----|----|
@@ -500,7 +501,7 @@ J'ai fait avec le port forwarding, mais possibilité de faire avec Ngrok : [Tuto
 
 
 
-#### c. Persistance 
+### c. Persistance 
 
 
 --> Quel est l'objectif ? Que veut-on faire sur l'ordinateur de la victime ?
@@ -571,27 +572,43 @@ Il est impossible de communiquer avec une machine dans un sous-réseau que avec 
 192.168.1.10 : machine cible.
 192.168.1.17 : attaquant.
 
-// l'attaquant forge un paquet ARP où il dit à la machine de la victime que son adresse MAC correspond à l'IP de la passerelle
+// l'attaquant forge un paquet ARP (contenu dans une trame ethernet) où il dit à la machine de la victime que son adresse MAC correspond à l'IP de la passerelle
 Paquet ARP :
 ip_source= 192.168.1.1
 mac_source= <adresse_mac attaquant>
 ip_destination= 192.168.1.10
 ```
+
 ```
 arp -a // commande qui permet de voir la table arp
 // Table ARP : tableau de correspondance entre une adresse IP et une adresse MAC
 // Si un périphérique 1 veut parler à un périphérique 2 mais n'a pas son addr MAC, va demander et c'est le periphérique concerné qui est censé faire une réponse ARP avec son addr MAC. Avec la réponse périphérique 1 rempli sa table ARP, et la prochaine fois n'aura pas a demandé l'addr MAC.
 ```
 
-## 1. ARP Poisoning
 
-#### a. Réussir à mettre notre adresse MAC à la place de l'adresse MAC du routeur dans la table ARP de la machine cible
+## 1. Changer tables ARP (routeur + cible) + IP forward
+
+### a. Réussir à mettre notre adresse MAC à la place de l'adresse MAC du routeur dans la table ARP de la machine cible
 
 Pour exploiter cette faille différents outils ;
 - arpspoof
 - ettercap
 - arpoison
-- Ou possible de la faire à la main en python avec la librairie scapy
+- Ou possible de à la main forger un paquet ARP dans une trame Ethernet, en python avec la librairie scapy
+
+Trame Ethernet = couche 1 / 2 (LAN) modele OSI ==> protocole Ethernet et adresses MAC. Message envoyé en couche 2 s'appelle une trame. Dans cette trame Ethernet, contient un paquet ARP.
+
+![paquet ARP](https://github.com/iciamyplant/client_side_attack/assets/57531966/6fe11809-3bff-4326-8d73-23e326b8f09d)
+
+Paquet ARP :
+
+![Capture d’écran 2023-08-11 à 12 15 49](https://github.com/iciamyplant/client_side_attack/assets/57531966/d9d69f93-1e51-421d-bbac-47321b1ead7b)
+
+- Hardware Type : 0x0001 (Ethernet)
+- Protocol Type : 0x8000 (ipv4)
+- Hardware adress lenght : 6 octets, protocol adresse lenght : 4 octets
+- operation code : 2 (si c'est une requete ou une reponse)
+- sender mac adress : 
 
 ````
 from scapy.all import *
@@ -614,17 +631,18 @@ while True: #envoyer le packet
 
 Résultat : on reçoit bien tous les paquets qui sont déstinés au routeur, la machine cible croit qu'on est le routeur
 
-#### b. Router les paquets reçus de la machine cible vers le routeur
+### b. Router les paquets reçus de la machine cible vers le routeur et inversement
 
 Par défaut, si une machine linux reçoit des paquets qui ne lui sont pas destinés (avec une IP différente), elle jete les paquets = IP forwarding est désactivé par défaut.
 ```
 echo 1 > /proc/sys/net/ipv4/ip_forward #activer le forwarding des paquets
 ```
 
-#### c. Faire le même choses pour les paquets qui vont du routeur à la cible
+### c. Faire le même choses pour les paquets qui vont du routeur à la cible
 
 - Réussir à mettre notre adresse MAC à la place de l'adresse MAC de la victime dans la table ARP du routeur
 - Router les paquets vers la victime
+
 
 ## 2. Monitoring & modify the traffic
 

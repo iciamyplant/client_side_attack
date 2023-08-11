@@ -588,13 +588,14 @@ arp -a // commande qui permet de voir la table arp
 
 ## 1. Changer tables ARP (routeur + cible) + IP forward
 
-### a. Réussir à mettre notre adresse MAC à la place de l'adresse MAC du routeur dans la table ARP de la machine cible
-
 Pour exploiter cette faille différents outils ;
 - arpspoof
 - ettercap
+- bettercap
 - arpoison
 - Ou possible de à la main forger un paquet ARP dans une trame Ethernet, en python avec la librairie scapy
+
+### a. Réussir à mettre notre adresse MAC à la place de l'adresse MAC du routeur dans la table ARP de la machine cible à la main
 
 Trame Ethernet = couche 1 / 2 (LAN) modele OSI ==> protocole Ethernet et adresses MAC. Message envoyé en couche 2 s'appelle une trame. Dans cette trame Ethernet, contient un paquet ARP.
 
@@ -632,12 +633,13 @@ while True: #envoyer le packet
        sendp(total) 
 ````
 
-Résultat : ca a marché, on a bien changé la table ARP, désormais l'adresse mac de la machine attaquante est associée à l'adresse IP du routeur. 
-
 ```
 ping 192.168.1.254 // à partir de la machine victime ==>  ca s'affiche bien sur le wirshark de notre Kali sur le MSI
 // Wireshark ==> on reçoit bien tous les paquets qui sont déstinés au routeur, la machine cible croit qu'on est le routeur
 ```
+
+Résultat : ca a marché, on a bien changé la table ARP, désormais l'adresse mac de la machine attaquante est associée à l'adresse IP du routeur. 
+==> Maintenant il faudrait faire la même chose pour les paquets qui vont du routeur à la cible. Cad réussir à mettre notre adresse MAC à la place de l'adresse MAC de la victime dans la table ARP du routeur.
 
 ### b. Router les paquets reçus de la machine cible vers le routeur et inversement
 
@@ -646,14 +648,19 @@ Par défaut, si une machine linux reçoit des paquets qui ne lui sont pas destin
 sudo bash -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'
 ```
 
-### c. Faire le même choses pour les paquets qui vont du routeur à la cible
-
-- Réussir à mettre notre adresse MAC à la place de l'adresse MAC de la victime dans la table ARP du routeur
 
 
-## 2. Monitoring & modify the traffic
+## 2. Bettercap : MiTM + monitoring & modify the traffic
+
+````
+sudo bettercap
+> net.probe on // voir tout le monde sur le réseau, identifier son addr ip + addr MAC
+> net.show // tous les devices connectés, nous donne la gateway
+````
+
 
 -> ajouter le hook.js dans toutes les pages http
+-> on pourrait même rediriger une page demandée vers une autre
 
 
 -------------

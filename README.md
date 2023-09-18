@@ -721,6 +721,7 @@ events.ignore net.sniff.mdns
 events.ignore net.sniff.dns
 ```
 ==> Et là on repère dès que y a une requête authenticate.riotgames.com
+https://authenticate.riotgames.com/?client_id=accountodactyl-prod&method=riot_identity&platform=web&redirect_uri=https%3A%2F%2Fauth.riotgames.com%2Fauthorize%3Facr_values%3Durn%253Ariot%253Agold%26client_id%3Daccountodactyl-prod%26redirect_uri%3Dhttps%253A%252F%252Faccount.riotgames.com%252Foauth2%252Flog-in%26response_type%3Dcode%26scope%3Dopenid%2520email%2520profile%2520riot%253A%252F%252Friot.atlas%252Faccounts.edit%2520riot%253A%252F%252Friot.atlas%252Faccounts%252Fpassword.edit%2520riot%253A%252F%252Friot.atlas%252Faccounts%252Femail.edit%2520riot%253A%252F%252Friot.atlas%252Faccounts.auth%2520riot%253A%252F%252Fthird_party.revoke%2520riot%253A%252F%252Fthird_party.query%2520riot%253A%252F%252Fforgetme%252Fnotify.write%2520riot%253A%252F%252Friot.authenticator%252Fauth.code%2520riot%253A%252F%252Friot.authenticator%252Fauthz.edit%2520riot%253A%252F%252Frso%252Fmfa%252Fdevice.write%2520riot%253A%252F%252Friot.authenticator%252Fidentity.add%26state%3Dcb9fcdab-e903-42a5-ba73-17fdfa2976f8&security_profile=high
 
 Automatiser bettercap en utilisant les caplets :
 

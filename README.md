@@ -709,6 +709,27 @@ nous on veut que net.sniff.https et http
 [doc officielle bettercap](https://www.bettercap.org/intro/)
 
 
+### e. Probleme : traffic ultra slow sur ordi victime, certains sites inaccessibles
+
+Même problème que moi : "it has internet connection, but strange type of connection. it can load easily facebook pages and some other single websites, it can search things on google but not get in their websites" [ici](https://www.reddit.com/r/Hacking_Tutorials/comments/ombx27/arp_poisoning_kills_victim_internet/)
+
+1- vérifier si je reçois bien les requests que le MAC fait au routeur
+2- si je reçois bien les requets, voir si je les achemine bien vers le routeur, et que le routeur les reçoit
+3- vérifier si je reçois les réponses du routeur
+4- verifier si j'achemine bien les réponses du routeur vers le MAC
+
+
+Est-ce que le port forwarding suffit ? 
+```
+sysctl -w net.ipv4.ip_forward=1
+sudo bash -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'
+```
+Firewall config ?
+Security measures sur le routeur ?
+
+
+
+
 ## 2. Voir le traffic, quels sites HTTP & HTTPS il consulte et repérer l'authentification à Riot Games
 
 

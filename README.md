@@ -1,5 +1,6 @@
 # Client Side Attacks
 
+= Les attaques côté client exploitent la relation de confiance entre un utilisateur et les sites Web qu'il visite
 = attaque où la connexion au contenu malveillant est initiée à partir du client (généralement en étant incité à cliquer sur un lien malveillant dans un e-mail, un message instantané, ou autre : user interaction often needed), contrairement aux server-side attacks où le serveur initie l'attaque (par exemple SQL injection). 
 - l'attaquant send un link ou autre
 - le client clique et initie la connection au serveur malicieux
